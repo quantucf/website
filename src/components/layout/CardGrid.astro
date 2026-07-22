@@ -1,0 +1,25 @@
+---
+interface Props {
+  as?: "div" | "ol" | "ul";
+  columns?: 2 | 3;
+  class?: string;
+  dataSupportList?: boolean;
+}
+
+const {
+  as: Element = "div",
+  columns = 2,
+  class: className,
+  dataSupportList = false,
+} = Astro.props as Props;
+
+const columnClass = columns === 3 ? "md:grid-cols-3" : "md:grid-cols-2";
+---
+
+<Element
+  class:list={["grid gap-6", columnClass, className]}
+  data-card-grid
+  data-support-list={dataSupportList ? true : undefined}
+>
+  <slot />
+</Element>

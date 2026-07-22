@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  sponsor: CollectionEntry<"sponsors">["data"];
+}
+
+const { sponsor } = Astro.props;
+const tierColors = {
+  Platinum: "text-[color:var(--theme-tier-platinum)]",
+  Gold: "text-[color:var(--theme-tier-gold)]",
+  Silver: "text-[color:var(--theme-tier-silver)]",
+  Bronze: "text-[color:var(--theme-tier-bronze)]",
+};
+---
+
+<article class="border-border grid gap-4 py-8 sm:grid-cols-[9rem_1fr] sm:gap-8">
+  <p
+    class:list={[
+      "text-xs font-semibold tracking-wider uppercase",
+      tierColors[sponsor.tier],
+    ]}
+    data-sponsor-tier={sponsor.tier}
+  >
+    {sponsor.tier}
+  </p>
+  <div>
+    <h2 class="text-2xl font-semibold tracking-tight">{sponsor.name}</h2>
+    <p class="text-muted-foreground mt-2">{sponsor.description}</p>
+  </div>
+</article>

@@ -1,0 +1,37 @@
+---
+import { getCollection } from "astro:content";
+
+import PageSection from "../components/layout/PageSection.astro";
+import OfficerCard from "../components/sections/OfficerCard.astro";
+import PageHero from "../components/sections/PageHero.astro";
+import EmptyState from "../components/ui/EmptyState.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const officers = (await getCollection("officers")).sort(
+  (left, right) => left.data.order - right.data.order,
+);
+---
+
+<BaseLayout
+  title="Officers | Quantitative Finance Club @ UCF"
+  description="Meet the students leading Quantitative Finance Club @ UCF’s events, research initiatives, projects, operations, and external partnerships."
+>
+  <PageHero
+    title="Officers"
+    description="Meet the students leading the club’s events, research initiatives, projects, operations, and external partnerships."
+  />
+
+  <PageSection>
+    {
+      officers.length > 0 ? (
+        <div class="grid gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+          {officers.map((officer) => (
+            <OfficerCard officer={officer.data} />
+          ))}
+        </div>
+      ) : (
+        <EmptyState subject="officers" />
+      )
+    }
+  </PageSection>
+</BaseLayout>

@@ -1,0 +1,62 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import type { GetStaticPathsOptions, Page } from "astro";
+
+import PageSection from "../../components/layout/PageSection.astro";
+import PaginationNav from "../../components/navigation/PaginationNav.astro";
+import PageHero from "../../components/sections/PageHero.astro";
+import PostRow from "../../components/sections/PostRow.astro";
+import EmptyState from "../../components/ui/EmptyState.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { POSTS_PER_PAGE } from "../../lib/archive";
+
+export async function getStaticPaths({
+  paginate,
+}: GetStaticPathsOptions): Promise<
+  ReturnType<GetStaticPathsOptions["paginate"]>
+> {
+  const posts = (await getCollection("posts"))
+    .filter((post) => !post.data.draft)
+    .sort(
+      (left, right) => right.data.date.getTime() - left.data.date.getTime(),
+    );
+
+  return paginate(posts, { pageSize: POSTS_PER_PAGE });
+}
+
+interface Props {
+  page: Page<CollectionEntry<"posts">>;
+}
+
+const { page } = Astro.props;
+const pageTitle =
+  page.currentPage === 1
+    ? "Posts | Quantitative Finance Club @ UCF"
+    : `Posts - Page ${page.currentPage} | Quantitative Finance Club @ UCF`;
+const pageDescription =
+  page.currentPage === 1
+    ? "Read posts, announcements, and resources from Quantitative Finance Club @ UCF."
+    : `Read page ${page.currentPage} of posts, announcements, and resources from Quantitative Finance Club @ UCF.`;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <PageHero
+    title="Posts"
+    description="Posts, announcements, and resources shared by the club."
+  />
+
+  <PageSection>
+    {
+      page.data.length > 0 ? (
+        <div class="[&>article+article]:border-t">
+          {page.data.map((post) => (
+            <PostRow post={post} />
+          ))}
+        </div>
+      ) : (
+        <EmptyState subject="posts" />
+      )
+    }
+    <PaginationNav page={page} />
+  </PageSection>
+</BaseLayout>

@@ -1,0 +1,45 @@
+---
+interface Props {
+  page: {
+    currentPage: number;
+    lastPage: number;
+    url: {
+      prev?: string;
+      next?: string;
+    };
+  };
+}
+
+const { page } = Astro.props;
+---
+
+{
+  page.lastPage > 1 && (
+    <nav
+      class="mt-10 flex flex-wrap items-center justify-between gap-4 text-sm"
+      aria-label="Pagination"
+    >
+      <div class="text-muted-foreground">
+        Page {page.currentPage} of {page.lastPage}
+      </div>
+      <div class="flex gap-2">
+        {page.url.prev && (
+          <a
+            class="border-border hover:border-accent hover:text-accent inline-flex min-h-10 items-center border px-4 font-semibold transition-colors"
+            href={page.url.prev}
+          >
+            Previous
+          </a>
+        )}
+        {page.url.next && (
+          <a
+            class="border-border hover:border-accent hover:text-accent inline-flex min-h-10 items-center border px-4 font-semibold transition-colors"
+            href={page.url.next}
+          >
+            Next
+          </a>
+        )}
+      </div>
+    </nav>
+  )
+}

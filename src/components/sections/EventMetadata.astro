@@ -1,0 +1,107 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import { clubTimeZone, formatLabel } from "../../lib/content";
+import { isDateOnly } from "../../lib/events";
+import EventTypeIcon from "../ui/EventTypeIcon.astro";
+import Icon from "../ui/Icon.astro";
+import LocalizedDate from "../ui/LocalizedDate.astro";
+
+interface Props {
+  event: CollectionEntry<"events">["data"];
+}
+
+const { event } = Astro.props;
+const startDateOnly = event.startDate ? isDateOnly(event.startDate) : false;
+const endDateOnly = event.endDate ? isDateOnly(event.endDate) : false;
+const eventDateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: clubTimeZone,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+const spansMultipleDates =
+  event.startDate &&
+  event.endDate &&
+  (startDateOnly
+    ? event.startDate
+    : eventDateFormatter.format(new Date(event.startDate))) !==
+    (endDateOnly
+      ? event.endDate
+      : eventDateFormatter.format(new Date(event.endDate)));
+---
+
+<div
+  class="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm leading-5 sm:gap-x-6"
+  data-event-metadata
+>
+  <span class="text-muted-foreground inline-flex items-center gap-1.5">
+    <EventTypeIcon eventType={event.eventType} />
+    {formatLabel(event.eventType)}
+  </span>
+  <span
+    class="text-muted-foreground inline-flex items-center gap-1.5"
+    data-metadata-icon="calendar"
+  >
+    <Icon name="calendar" class="size-3.5" />
+    {
+      event.startDate ? (
+        <>
+          <LocalizedDate
+            date={event.startDate}
+            format="date"
+            timeZone={startDateOnly ? "UTC" : clubTimeZone}
+          />
+          {spansMultipleDates && event.endDate && (
+            <>
+              {" – "}
+              <LocalizedDate
+                date={event.endDate}
+                format="date"
+                timeZone={endDateOnly ? "UTC" : clubTimeZone}
+              />
+            </>
+          )}
+        </>
+      ) : (
+        "TBD"
+      )
+    }
+  </span>
+  {
+    event.startDate && !startDateOnly && (
+      <span
+        class="text-muted-foreground inline-flex items-center gap-1.5"
+        data-metadata-icon="clock"
+      >
+        <Icon name="clock" class="size-3.5" />
+        <LocalizedDate
+          date={event.startDate}
+          format="time"
+          timeZone={clubTimeZone}
+        />
+        {event.endDate && (
+          <>
+            {" – "}
+            <LocalizedDate
+              date={event.endDate}
+              format="time"
+              timeZone={clubTimeZone}
+            />
+          </>
+        )}
+      </span>
+    )
+  }
+  {
+    event.location && (
+      <span
+        class="text-muted-foreground inline-flex items-center gap-1.5"
+        data-metadata-icon="location"
+      >
+        <Icon name="location" class="size-3.5" />
+        {event.location}
+      </span>
+    )
+  }
+</div>

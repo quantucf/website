@@ -1,0 +1,94 @@
+---
+import Calendar from "@lucide/astro/icons/calendar";
+import Clock from "@lucide/astro/icons/clock";
+import ExternalLink from "@lucide/astro/icons/external-link";
+import FileText from "@lucide/astro/icons/file-text";
+import Globe from "@lucide/astro/icons/globe";
+import Mail from "@lucide/astro/icons/mail";
+import MapPin from "@lucide/astro/icons/map-pin";
+import MonitorPlay from "@lucide/astro/icons/monitor-play";
+import Presentation from "@lucide/astro/icons/presentation";
+import SquareCheck from "@lucide/astro/icons/square-check";
+import University from "@lucide/astro/icons/university";
+import Video from "@lucide/astro/icons/video";
+import { siDiscord, siGithub, siInstagram } from "simple-icons";
+
+export type IconName =
+  | "calendar"
+  | "clock"
+  | "demo"
+  | "discord"
+  | "email"
+  | "external"
+  | "github"
+  | "globe"
+  | "instagram"
+  | "linkedin"
+  | "location"
+  | "paper"
+  | "recording"
+  | "rsvp"
+  | "slides"
+  | "university";
+
+interface Props {
+  name: IconName;
+  class?: string;
+}
+
+const { name, class: className = "size-4" } = Astro.props;
+
+const brandIcons = {
+  discord: siDiscord,
+  github: siGithub,
+  instagram: siInstagram,
+  linkedin: {
+    path: "M5.34 3.5A2.34 2.34 0 1 1 5.34 8.18 2.34 2.34 0 0 1 5.34 3.5ZM3.32 9.75h4.04V22H3.32V9.75Zm6.5 0h3.88v1.68h.05c.54-1.02 1.86-2.1 3.83-2.1 4.1 0 4.86 2.7 4.86 6.2V22H18.4v-5.73c0-1.37-.03-3.13-1.91-3.13-1.91 0-2.2 1.49-2.2 3.03V22H9.82V9.75Z",
+  },
+};
+
+const lucideIcons = {
+  calendar: Calendar,
+  clock: Clock,
+  demo: MonitorPlay,
+  email: Mail,
+  external: ExternalLink,
+  globe: Globe,
+  location: MapPin,
+  paper: FileText,
+  recording: Video,
+  rsvp: SquareCheck,
+  slides: Presentation,
+  university: University,
+};
+
+const BrandIcon =
+  name in brandIcons ? brandIcons[name as keyof typeof brandIcons] : undefined;
+const LucideIcon =
+  name in lucideIcons
+    ? lucideIcons[name as keyof typeof lucideIcons]
+    : undefined;
+---
+
+{
+  BrandIcon ? (
+    <svg
+      class={className}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      data-icon={name}
+    >
+      <path d={BrandIcon.path} />
+    </svg>
+  ) : (
+    LucideIcon && (
+      <LucideIcon
+        class={className}
+        stroke-width={1.75}
+        aria-hidden="true"
+        data-icon={name}
+      />
+    )
+  )
+}

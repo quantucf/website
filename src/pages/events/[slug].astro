@@ -1,0 +1,105 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
+import Container from "../../components/layout/Container.astro";
+import EventMetadata from "../../components/sections/EventMetadata.astro";
+import MarkdownBody from "../../components/ui/MarkdownBody.astro";
+import ResourceLinks from "../../components/ui/ResourceLinks.astro";
+import type { ResourceLink } from "../../components/ui/ResourceLinks.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { clubTimeZone } from "../../lib/content";
+import { isDateOnly } from "../../lib/events";
+import { eventJsonLd } from "../../lib/structured-data";
+
+export async function getStaticPaths() {
+  const events = await getCollection("events");
+
+  return events.map((event) => ({
+    params: { slug: event.id },
+    props: { event },
+  }));
+}
+
+interface Props {
+  event: CollectionEntry<"events">;
+}
+
+const { event } = Astro.props;
+const { Content } = await render(event);
+const titleDate = event.data.startDate
+  ? new Intl.DateTimeFormat("en-US", {
+      dateStyle: "long",
+      timeZone: isDateOnly(event.data.startDate) ? "UTC" : clubTimeZone,
+    }).format(
+      new Date(
+        isDateOnly(event.data.startDate)
+          ? `${event.data.startDate}T12:00:00Z`
+          : event.data.startDate,
+      ),
+    )
+  : "TBD";
+const resourceLinks: ResourceLink[] = [];
+
+if (event.data.rsvpUrl) {
+  resourceLinks.push({
+    label: "RSVP",
+    href: event.data.rsvpUrl,
+    icon: "rsvp",
+  });
+}
+
+if (event.data.slidesUrl) {
+  resourceLinks.push({
+    label: "Slides",
+    href: event.data.slidesUrl,
+    icon: "slides",
+  });
+}
+
+if (event.data.recordingUrl) {
+  resourceLinks.push({
+    label: "Recording",
+    href: event.data.recordingUrl,
+    icon: "recording",
+  });
+}
+---
+
+<BaseLayout
+  title={`${event.data.title} | ${titleDate} | Quantitative Finance Club @ UCF`}
+  description={event.data.description}
+  jsonLd={eventJsonLd(event)}
+>
+  <article>
+    <Container class="py-16 sm:py-24">
+      <div class="max-w-content">
+        <a class="text-sm font-semibold underline" href="/events/">
+          All events
+        </a>
+        <header class="mt-10">
+          <EventMetadata event={event.data} />
+          <h1
+            class="mt-6 text-4xl font-semibold tracking-tight text-balance sm:text-5xl"
+          >
+            {event.data.title}
+          </h1>
+          <p class="text-muted-foreground mt-6 text-lg leading-8 text-pretty">
+            {event.data.description}
+          </p>
+          {
+            resourceLinks.length > 0 && (
+              <ResourceLinks
+                links={resourceLinks}
+                label={`${event.data.title} resources`}
+                class="mt-7"
+              />
+            )
+          }
+        </header>
+        <MarkdownBody>
+          <Content />
+        </MarkdownBody>
+      </div>
+    </Container>
+  </article>
+</BaseLayout>

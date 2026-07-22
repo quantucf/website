@@ -1,0 +1,77 @@
+---
+import { getCollection } from "astro:content";
+
+import PageSection from "../components/layout/PageSection.astro";
+import EventRow from "../components/sections/EventRow.astro";
+import PageHero from "../components/sections/PageHero.astro";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+import EmptyState from "../components/ui/EmptyState.astro";
+import LinkButton from "../components/ui/LinkButton.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  isPastEvent,
+  isUpcomingEvent,
+  RECENT_PAST_EVENTS_LIMIT,
+  sortEventsAscending,
+  sortEventsDescending,
+} from "../lib/archive";
+
+const now = new Date();
+const events = await getCollection("events");
+const upcomingEvents = events
+  .filter((event) => isUpcomingEvent(event, now))
+  .sort(sortEventsAscending);
+const pastEvents = events
+  .filter((event) => isPastEvent(event, now))
+  .sort(sortEventsDescending);
+const recentPastEvents = pastEvents.slice(0, RECENT_PAST_EVENTS_LIMIT);
+---
+
+<BaseLayout
+  title="Events | Quantitative Finance Club @ UCF"
+  description="Explore workshops, guest talks, career events, and general meetings from Quantitative Finance Club @ UCF."
+>
+  <PageHero
+    title="Events"
+    description="Workshops, guest talks, recruiting events, and general meetings for students interested in quantitative finance."
+  />
+
+  {
+    events.length === 0 ? (
+      <PageSection>
+        <EmptyState subject="events" />
+      </PageSection>
+    ) : (
+      <>
+        {upcomingEvents.length > 0 && (
+          <PageSection>
+            <SectionHeader title="Upcoming" />
+            <div class="mt-8 [&>article+article]:border-t [&>article:first-child]:pt-0">
+              {upcomingEvents.map((event) => (
+                <EventRow event={event.data} href={`/events/${event.id}/`} />
+              ))}
+            </div>
+          </PageSection>
+        )}
+
+        {recentPastEvents.length > 0 && (
+          <PageSection>
+            <SectionHeader title="Past" />
+            <div class="mt-8 [&>article+article]:border-t [&>article:first-child]:pt-0">
+              {recentPastEvents.map((event) => (
+                <EventRow event={event.data} href={`/events/${event.id}/`} />
+              ))}
+            </div>
+            {pastEvents.length > RECENT_PAST_EVENTS_LIMIT && (
+              <div class="mt-10">
+                <LinkButton href="/events/archive/" variant="secondary">
+                  View all past events
+                </LinkButton>
+              </div>
+            )}
+          </PageSection>
+        )}
+      </>
+    )
+  }
+</BaseLayout>

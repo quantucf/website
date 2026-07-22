@@ -1,0 +1,72 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import { getInitials } from "../../lib/content";
+import Icon from "../ui/Icon.astro";
+
+interface Props {
+  officer: CollectionEntry<"officers">["data"];
+}
+
+const { officer } = Astro.props;
+const programDetails = [officer.program, officer.year].filter(Boolean);
+const contactLinks = [
+  officer.linkedin && {
+    label: `${officer.name} on LinkedIn`,
+    href: officer.linkedin,
+    icon: "linkedin" as const,
+  },
+  officer.github && {
+    label: `${officer.name} on GitHub`,
+    href: officer.github,
+    icon: "github" as const,
+  },
+  officer.email && {
+    label: `Email ${officer.name}`,
+    href: `mailto:${officer.email}`,
+    icon: "email" as const,
+  },
+].filter((link): link is Exclude<typeof link, string | undefined> =>
+  Boolean(link),
+);
+---
+
+<article class="border-border bg-surface flex h-full flex-col border p-6">
+  <div
+    class="bg-muted text-muted-foreground flex size-14 items-center justify-center text-sm font-semibold"
+    aria-hidden="true"
+  >
+    {getInitials(officer.name)}
+  </div>
+  <h2 class="mt-5 text-xl font-semibold tracking-tight">{officer.name}</h2>
+  <p class="mt-1 font-medium">{officer.role}</p>
+  {
+    programDetails.length > 0 && (
+      <p class="text-muted-foreground mt-3 text-sm leading-6">
+        {programDetails.join(" · ")}
+      </p>
+    )
+  }
+  {
+    contactLinks.length > 0 && (
+      <ul
+        class="mt-auto flex flex-wrap gap-2 pt-5"
+        aria-label={`${officer.name} links`}
+      >
+        {contactLinks.map((link) => (
+          <li>
+            <a
+              class="border-border text-muted-foreground hover:border-accent hover:text-accent flex size-9 items-center justify-center border transition-colors"
+              href={link.href}
+              aria-label={link.label}
+              target={link.icon === "email" ? undefined : "_blank"}
+              rel={link.icon === "email" ? undefined : "noreferrer"}
+            >
+              <Icon name={link.icon} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</article>

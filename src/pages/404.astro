@@ -1,0 +1,31 @@
+---
+import Container from "../components/layout/Container.astro";
+import LinkButton from "../components/ui/LinkButton.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Page not found | Quantitative Finance Club @ UCF"
+  description="This page could not be found."
+  robots="noindex, follow"
+>
+  <Container class="py-20 sm:py-28">
+    <section class="max-w-content" aria-labelledby="page-title">
+      <p class="text-accent text-sm font-semibold tracking-wider uppercase">
+        404
+      </p>
+      <h1
+        id="page-title"
+        class="mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-5xl"
+      >
+        Page not found
+      </h1>
+      <p class="text-muted-foreground mt-6 leading-7">
+        The page you’re looking for does not exist or may have moved.
+      </p>
+      <div class="mt-8">
+        <LinkButton href="/">Return home</LinkButton>
+      </div>
+    </section>
+  </Container>
+</BaseLayout>

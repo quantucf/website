@@ -1,0 +1,67 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import type { GetStaticPathsOptions, Page } from "astro";
+
+import PageSection from "../../../components/layout/PageSection.astro";
+import PaginationNav from "../../../components/navigation/PaginationNav.astro";
+import EventRow from "../../../components/sections/EventRow.astro";
+import PageHero from "../../../components/sections/PageHero.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import {
+  ARCHIVE_PAGE_SIZE,
+  isPastEvent,
+  RECENT_PAST_EVENTS_LIMIT,
+  sortEventsDescending,
+} from "../../../lib/archive";
+
+export async function getStaticPaths({
+  paginate,
+}: GetStaticPathsOptions): Promise<
+  ReturnType<GetStaticPathsOptions["paginate"]>
+> {
+  const now = new Date();
+  const pastEvents = (await getCollection("events"))
+    .filter((event) => isPastEvent(event, now))
+    .sort(sortEventsDescending);
+
+  if (pastEvents.length <= RECENT_PAST_EVENTS_LIMIT) return [];
+
+  return paginate(pastEvents, { pageSize: ARCHIVE_PAGE_SIZE });
+}
+
+interface Props {
+  page: Page<CollectionEntry<"events">>;
+}
+
+const { page } = Astro.props;
+const pageTitle =
+  page.currentPage === 1
+    ? "Past events | Quantitative Finance Club @ UCF"
+    : `Past events - Page ${page.currentPage} | Quantitative Finance Club @ UCF`;
+const pageDescription =
+  page.currentPage === 1
+    ? "Explore past workshops, guest talks, career events, and general meetings from Quantitative Finance Club @ UCF."
+    : `Explore page ${page.currentPage} of past workshops, guest talks, career events, and general meetings from Quantitative Finance Club @ UCF.`;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <PageHero
+    title="Past events"
+    description="Past workshops, guest talks, recruiting events, and general meetings hosted by the club."
+  />
+
+  <PageSection>
+    <div class="[&>article+article]:border-t">
+      {
+        page.data.map((event) => (
+          <EventRow
+            event={event.data}
+            href={`/events/${event.id}/`}
+            headingLevel="h2"
+          />
+        ))
+      }
+    </div>
+    <PaginationNav page={page} />
+  </PageSection>
+</BaseLayout>

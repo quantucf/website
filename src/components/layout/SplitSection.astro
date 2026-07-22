@@ -1,0 +1,19 @@
+---
+interface Props {
+  variant?: "equal" | "sidebar";
+  class?: string;
+}
+
+const { variant = "equal", class: className } = Astro.props;
+
+const variants = {
+  equal:
+    "grid gap-10 md:grid-cols-2 md:gap-0 [&>*+*]:border-t [&>*+*]:pt-10 md:[&>*:first-child]:pr-10 md:[&>*+*]:border-t-0 md:[&>*+*]:pt-0 md:[&>*+*]:border-l md:[&>*+*]:pl-10",
+  sidebar:
+    "grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(15rem,1fr)] lg:gap-0 [&>*+*]:border-t [&>*+*]:pt-10 lg:[&>*:first-child]:pr-10 lg:[&>*+*]:border-t-0 lg:[&>*+*]:pt-0 lg:[&>*+*]:border-l lg:[&>*+*]:pl-10",
+};
+---
+
+<div class:list={[variants[variant], className]} data-split-section={variant}>
+  <slot />
+</div>

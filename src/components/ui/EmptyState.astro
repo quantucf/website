@@ -1,0 +1,15 @@
+---
+interface Props {
+  subject: string;
+  class?: string;
+}
+
+const { subject, class: className } = Astro.props;
+---
+
+<p
+  class:list={["text-muted-foreground max-w-content leading-7", className]}
+  data-empty-state
+>
+  No {subject} are listed yet.
+</p>
