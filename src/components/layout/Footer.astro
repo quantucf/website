@@ -1,0 +1,50 @@
+---
+import Container from "./Container.astro";
+import { footerEmailLink, footerSocialLinks } from "../../data/site-content";
+import Icon from "../ui/Icon.astro";
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="border-border border-t">
+  <Container class="py-6">
+    <div
+      class="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center"
+      data-footer-links
+    >
+      <ul
+        class="grid grid-cols-2 gap-x-5 gap-y-3 sm:flex sm:flex-wrap sm:items-center sm:gap-x-4"
+        data-footer-socials
+      >
+        {
+          footerSocialLinks.map((link) => (
+            <li>
+              <a
+                class="text-muted-foreground hover:text-accent inline-flex items-center gap-1.5 text-sm transition-colors"
+                href={link.href}
+                aria-label={link.label}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Icon name={link.icon} class="size-3.5" />
+                <span>{link.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a
+        class="text-muted-foreground hover:text-accent inline-flex items-center gap-1.5 justify-self-start text-sm transition-colors md:justify-self-end"
+        href={footerEmailLink.href}
+        aria-label={footerEmailLink.label}
+        data-footer-email
+      >
+        <Icon name={footerEmailLink.icon} class="size-3.5" />
+        <span>{footerEmailLink.label}</span>
+      </a>
+    </div>
+    <p class="text-muted-foreground mt-6 text-sm" data-footer-copyright>
+      &copy; {currentYear} Quantitative Finance Club @ UCF
+    </p>
+  </Container>
+</footer>

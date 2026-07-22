@@ -1,0 +1,87 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
+import Container from "../../components/layout/Container.astro";
+import BoxList from "../../components/ui/BoxList.astro";
+import LocalizedDate from "../../components/ui/LocalizedDate.astro";
+import MarkdownBody from "../../components/ui/MarkdownBody.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { absoluteUrl } from "../../lib/site";
+import { blogPostingJsonLd } from "../../lib/structured-data";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("posts")).filter(
+    (post) => !post.data.draft,
+  );
+
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<"posts">;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const canonicalUrl = absoluteUrl(`/posts/${post.id}/`);
+---
+
+<BaseLayout
+  title={`${post.data.title} | Quantitative Finance Club @ UCF`}
+  description={post.data.description}
+  ogType="article"
+  articlePublishedTime={post.data.date.toISOString()}
+  jsonLd={blogPostingJsonLd({ post, canonicalUrl })}
+>
+  <article>
+    <Container class="py-16 sm:py-24">
+      <div class="max-w-content">
+        <a class="text-sm font-semibold underline" href="/posts/">All posts</a>
+        <header class="mt-10">
+          <p class="text-muted-foreground text-sm">
+            <LocalizedDate
+              date={post.data.date}
+              format="date"
+              dateStyle="long"
+              timeZone="UTC"
+            />
+            {
+              post.data.author && (
+                <>
+                  <span aria-hidden="true">{" · "}</span>
+                  <span class="sr-only">{", "}</span>
+                  <span>{post.data.author}</span>
+                </>
+              )
+            }
+          </p>
+          <h1
+            class="mt-5 text-4xl font-semibold tracking-tight text-balance sm:text-5xl"
+          >
+            {post.data.title}
+          </h1>
+          <p class="text-muted-foreground mt-6 text-lg leading-8 text-pretty">
+            {post.data.description}
+          </p>
+          {
+            post.data.topics.length > 0 && (
+              <BoxList
+                items={post.data.topics}
+                label="Post topics"
+                kind="tag"
+                class="mt-6"
+              />
+            )
+          }
+        </header>
+
+        <MarkdownBody>
+          <Content />
+        </MarkdownBody>
+      </div>
+    </Container>
+  </article>
+</BaseLayout>

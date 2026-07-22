@@ -1,0 +1,89 @@
+---
+import CardGrid from "../components/layout/CardGrid.astro";
+import PageSection from "../components/layout/PageSection.astro";
+import PageHero from "../components/sections/PageHero.astro";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+import { contactEmail, joinChannels } from "../data/site-content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/ui/Icon.astro";
+---
+
+<BaseLayout
+  title="Join | Quantitative Finance Club @ UCF"
+  description="Join Quantitative Finance Club @ UCF, open to students of all majors who want to explore quantitative finance, attend events, and get involved."
+>
+  <PageHero
+    title="Join the club"
+    description="Open to UCF students of all majors who want to explore quantitative finance, attend events, and get involved."
+  />
+
+  <PageSection>
+    <SectionHeader title="How to participate" />
+    <CardGrid as="ol" columns={2} class="mt-10">
+      <li class="border-border bg-surface border p-6">
+        <span class="text-muted-foreground text-sm">01</span>
+        <h3 class="mt-3 text-lg font-semibold">Join on KnightConnect</h3>
+        <p class="text-muted-foreground mt-3 leading-7">
+          Register through KnightConnect to be added to the official club
+          roster.
+        </p>
+      </li>
+      <li class="border-border bg-surface border p-6">
+        <span class="text-muted-foreground text-sm">02</span>
+        <h3 class="mt-3 text-lg font-semibold">Follow updates</h3>
+        <p class="text-muted-foreground mt-3 leading-7">
+          Follow the club’s official channels for meeting announcements, event
+          details, and schedule changes.
+        </p>
+      </li>
+      <li class="border-border bg-surface border p-6">
+        <span class="text-muted-foreground text-sm">03</span>
+        <h3 class="mt-3 text-lg font-semibold">Attend an event</h3>
+        <p class="text-muted-foreground mt-3 leading-7">
+          Start with a general meeting, workshop, guest talk, or recruiting
+          event.
+        </p>
+      </li>
+      <li class="border-border bg-surface border p-6">
+        <span class="text-muted-foreground text-sm">04</span>
+        <h3 class="mt-3 text-lg font-semibold">Get involved</h3>
+        <p class="text-muted-foreground mt-3 leading-7">
+          Join a project, help with an event, or share an idea for a future
+          meeting.
+        </p>
+      </li>
+    </CardGrid>
+  </PageSection>
+
+  <PageSection>
+    <SectionHeader title="Contact" />
+    <ul class="mt-8 flex flex-wrap gap-3">
+      {
+        joinChannels.map((channel) => (
+          <li>
+            <a
+              class="border-border bg-surface hover:border-accent hover:text-accent inline-flex min-h-11 items-center gap-2 border px-4 py-3 text-sm font-semibold transition-colors"
+              href={channel.href}
+              data-channel-link={channel.label}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Icon name={channel.icon} />
+              <span>{channel.label}</span>
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a
+          id="contact"
+          class="border-border bg-surface hover:border-accent hover:text-accent inline-flex min-h-11 scroll-mt-8 items-center gap-2 border px-4 py-3 text-sm font-semibold transition-colors"
+          href={`mailto:${contactEmail}`}
+        >
+          <Icon name="email" />
+          <span>{contactEmail}</span>
+        </a>
+      </li>
+    </ul>
+  </PageSection>
+</BaseLayout>

@@ -1,0 +1,62 @@
+---
+interface Props {
+  date: Date | string;
+  format: "date" | "time";
+  dateStyle?: "medium" | "long";
+  timeZone?: string;
+}
+
+const clubTimeZone = "America/New_York";
+const {
+  date,
+  format,
+  dateStyle = "medium",
+  timeZone = clubTimeZone,
+} = Astro.props;
+const normalizedDate =
+  typeof date === "string"
+    ? new Date(/^\d{4}-\d{2}-\d{2}$/.test(date) ? `${date}T12:00:00Z` : date)
+    : date;
+const fallbackOptions: Intl.DateTimeFormatOptions =
+  format === "time"
+    ? { hour: "numeric", minute: "2-digit", timeZone }
+    : { dateStyle, timeZone };
+const fallback = new Intl.DateTimeFormat("en-US", fallbackOptions).format(
+  normalizedDate,
+);
+---
+
+<time
+  datetime={typeof date === "string" ? date : date.toISOString()}
+  data-localized-date={format}
+  data-date-style={dateStyle}
+  data-time-zone={timeZone}
+>
+  {fallback}
+</time>
+
+<script>
+  const localizeDates = () => {
+    document.querySelectorAll("[data-localized-date]").forEach((element) => {
+      if (!(element instanceof HTMLTimeElement)) return;
+
+      const date = new Date(element.dateTime);
+      const timeZone = element.dataset.timeZone;
+      const options: Intl.DateTimeFormatOptions =
+        element.dataset.localizedDate === "time"
+          ? { hour: "numeric", minute: "2-digit", timeZone }
+          : {
+              dateStyle:
+                element.dataset.dateStyle === "long" ? "long" : "medium",
+              timeZone,
+            };
+
+      element.textContent = new Intl.DateTimeFormat(undefined, options).format(
+        date,
+      );
+    });
+  };
+
+  localizeDates();
+  document.addEventListener("astro:page-load", localizeDates);
+</script>

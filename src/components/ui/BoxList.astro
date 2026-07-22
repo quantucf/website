@@ -1,0 +1,72 @@
+---
+import Icon, { type IconName } from "./Icon.astro";
+import EventTypeIcon from "./EventTypeIcon.astro";
+import LocalizedDate from "./LocalizedDate.astro";
+import type { EventType } from "../../lib/events";
+
+export interface BoxListItem {
+  label?: string;
+  icon?: IconName;
+  date?: Date;
+  dateStyle?: "medium" | "long";
+  eventTypeIcon?: EventType;
+  format?: "date" | "time";
+  timeZone?: string;
+}
+
+interface Props {
+  items: Array<string | BoxListItem>;
+  label: string;
+  kind?: "metadata" | "status" | "tag";
+  class?: string;
+}
+
+const { items, label, kind = "tag", class: className } = Astro.props;
+---
+
+<ul
+  class:list={["flex flex-wrap gap-2", className]}
+  aria-label={label}
+  data-event-metadata={kind === "metadata" ? true : undefined}
+>
+  {
+    items.map((item) => {
+      const normalizedItem = typeof item === "string" ? { label: item } : item;
+
+      return (
+        <li
+          class:list={[
+            "inline-flex max-w-full items-center gap-1.5 border px-2.5 py-1.5 text-xs leading-4 font-medium break-words",
+            kind === "tag" &&
+              "text-muted-foreground border-border bg-transparent",
+            kind === "metadata" &&
+              "text-muted-foreground border-border bg-transparent",
+            kind === "status" &&
+              "text-muted-foreground border-border bg-transparent",
+          ]}
+          data-boxed-tag={kind === "tag" ? true : undefined}
+          data-project-status={kind === "status" ? true : undefined}
+        >
+          {normalizedItem.eventTypeIcon && (
+            <EventTypeIcon eventType={normalizedItem.eventTypeIcon} />
+          )}
+          {normalizedItem.icon && (
+            <span data-metadata-icon={normalizedItem.icon}>
+              <Icon name={normalizedItem.icon} class="size-3.5" />
+            </span>
+          )}
+          {normalizedItem.date && normalizedItem.format ? (
+            <LocalizedDate
+              date={normalizedItem.date}
+              format={normalizedItem.format}
+              dateStyle={normalizedItem.dateStyle}
+              timeZone={normalizedItem.timeZone}
+            />
+          ) : (
+            <span>{normalizedItem.label}</span>
+          )}
+        </li>
+      );
+    })
+  }
+</ul>

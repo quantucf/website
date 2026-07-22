@@ -1,0 +1,79 @@
+---
+import PageSection from "../components/layout/PageSection.astro";
+import PageHero from "../components/sections/PageHero.astro";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+import SponsorRow from "../components/sections/SponsorRow.astro";
+import EmptyState from "../components/ui/EmptyState.astro";
+import LinkButton from "../components/ui/LinkButton.astro";
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const sponsorTierRank = {
+  Platinum: 0,
+  Gold: 1,
+  Silver: 2,
+  Bronze: 3,
+};
+
+const sponsors = (await getCollection("sponsors"))
+  .map((sponsor) => sponsor.data)
+  .sort(
+    (left, right) =>
+      sponsorTierRank[left.tier] - sponsorTierRank[right.tier] ||
+      left.name.localeCompare(right.name),
+  );
+---
+
+<BaseLayout
+  title="Sponsors | Quantitative Finance Club @ UCF"
+  description="Support Quantitative Finance Club @ UCF and help fund student research, projects, events, and professional opportunities."
+>
+  <PageHero
+    title="Sponsors"
+    description="Support the club’s workshops, research projects, events, and opportunities for members."
+  />
+
+  <PageSection>
+    {
+      sponsors.length > 0 ? (
+        <div class="[&>article+article]:border-t">
+          {sponsors.map((sponsor) => (
+            <SponsorRow sponsor={sponsor} />
+          ))}
+        </div>
+      ) : (
+        <EmptyState subject="sponsors" />
+      )
+    }
+  </PageSection>
+
+  <PageSection>
+    <SectionHeader title="What sponsorship supports" />
+    <ul
+      class="max-w-content mt-8 grid gap-x-12 gap-y-4 md:grid-cols-2"
+      data-support-list
+    >
+      {
+        [
+          "Technical workshops",
+          "Guest talks",
+          "Competition fees and travel",
+          "Research datasets and software",
+          "Compute and infrastructure",
+          "Club operations",
+        ].map((item) => (
+          <li class="flex items-start gap-3 font-medium">
+            <span
+              class="bg-muted-foreground mt-2 size-1.5 shrink-0 rounded-full"
+              aria-hidden="true"
+            />
+            <span>{item}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="mt-8">
+      <LinkButton href="/join/#contact">Contact us</LinkButton>
+    </div>
+  </PageSection>
+</BaseLayout>

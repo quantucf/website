@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Quantitative Finance Club @ UCF covariance matrix mark">
+  <style>
+    .background {
+      fill: #000000;
+    }
+
+    .cell {
+      fill: #ffffff;
+    }
+
+    .signal {
+      fill: #ffc904;
+    }
+
+    @media (prefers-color-scheme: light) {
+      .background {
+        fill: #ffffff;
+      }
+
+      .cell {
+        fill: #000000;
+      }
+    }
+  </style>
+  <rect class="background" width="512" height="512" />
+  <rect class="signal" x="52" y="52" width="124" height="124" rx="20" />
+  <rect class="cell" x="194" y="52" width="124" height="124" rx="20" />
+  <rect class="cell" x="336" y="52" width="124" height="124" rx="20" />
+  <rect class="cell" x="52" y="194" width="124" height="124" rx="20" />
+  <rect class="signal" x="194" y="194" width="124" height="124" rx="20" />
+  <rect class="cell" x="336" y="194" width="124" height="124" rx="20" />
+  <rect class="cell" x="52" y="336" width="124" height="124" rx="20" />
+  <rect class="cell" x="194" y="336" width="124" height="124" rx="20" />
+  <rect class="signal" x="336" y="336" width="124" height="124" rx="20" />
+</svg>

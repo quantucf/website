@@ -1,0 +1,52 @@
+---
+import Briefcase from "@lucide/astro/icons/briefcase";
+import ChartLine from "@lucide/astro/icons/chart-line";
+import CircleQuestionMark from "@lucide/astro/icons/circle-question-mark";
+import Clock from "@lucide/astro/icons/clock";
+import Code from "@lucide/astro/icons/code";
+import HandHeart from "@lucide/astro/icons/hand-heart";
+import Info from "@lucide/astro/icons/info";
+import Map from "@lucide/astro/icons/map";
+import Mic from "@lucide/astro/icons/mic";
+import Network from "@lucide/astro/icons/network";
+import PanelTop from "@lucide/astro/icons/panel-top";
+import Presentation from "@lucide/astro/icons/presentation";
+import Trophy from "@lucide/astro/icons/trophy";
+import Users from "@lucide/astro/icons/users";
+import Wine from "@lucide/astro/icons/wine";
+import type { EventType } from "../../lib/events";
+
+interface Props {
+  eventType: EventType;
+  class?: string;
+}
+
+const { eventType, class: className = "size-3.5" } = Astro.props;
+
+const eventIcons = {
+  meeting: Users,
+  workshop: Code,
+  research: ChartLine,
+  speaker: Mic,
+  panel: PanelTop,
+  recruiting: Briefcase,
+  networking: Network,
+  competition: Trophy,
+  conference: Presentation,
+  social: Wine,
+  "info-session": Info,
+  "office-hours": Clock,
+  "field-trip": Map,
+  service: HandHeart,
+  other: CircleQuestionMark,
+};
+
+const Icon = eventIcons[eventType];
+---
+
+<Icon
+  class={className}
+  stroke-width={1.75}
+  aria-hidden="true"
+  data-event-type-icon={eventType}
+/>

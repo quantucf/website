@@ -1,0 +1,57 @@
+# Quantitative Finance Club @ UCF
+
+Quantitative Finance Club @ UCF gives students a place to explore financial markets through mathematics, statistics, programming, and research.
+
+The club organizes workshops, research initiatives, projects, guest talks, career events, and discussions about financial markets.
+
+## Key Pages
+
+- Home: https://quantucf.com/
+- About: https://quantucf.com/about/
+- Events: https://quantucf.com/events/
+- Projects: https://quantucf.com/projects/
+- Posts: https://quantucf.com/posts/
+- Officers: https://quantucf.com/officers/
+- Sponsors: https://quantucf.com/sponsors/
+- Join: https://quantucf.com/join/
+
+## Topics
+
+- Quantitative finance
+- Financial markets
+- Quantitative research
+- Market data
+- Probability
+- Statistics
+- Econometrics
+- Time series analysis
+- Machine learning
+- Optimization
+- Numerical methods
+- Programming
+- Data analysis
+- Data engineering
+- Financial modeling
+- Asset pricing
+- Portfolio construction
+- Portfolio optimization
+- Risk management
+- Factor investing
+- Backtesting
+- Algorithmic trading
+- Systematic trading
+- Trading strategies
+- Market making
+- Execution
+- Transaction costs
+- Derivatives
+- Options
+- Volatility
+- Fixed income
+- Yield curves
+- Market microstructure
+- Alternative data
+- Stochastic processes
+- Monte Carlo methods
+- Empirical finance
+- Research methods

@@ -1,0 +1,100 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
+import Container from "../../components/layout/Container.astro";
+import BoxList from "../../components/ui/BoxList.astro";
+import MarkdownBody from "../../components/ui/MarkdownBody.astro";
+import ResourceLinks from "../../components/ui/ResourceLinks.astro";
+import type { ResourceLink } from "../../components/ui/ResourceLinks.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { projectJsonLd } from "../../lib/structured-data";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const resourceLinks: ResourceLink[] = [];
+
+if (project.data.githubUrl) {
+  resourceLinks.push({
+    label: "GitHub",
+    href: project.data.githubUrl,
+    icon: "github",
+  });
+}
+
+if (project.data.demoUrl) {
+  resourceLinks.push({
+    label: "Demo",
+    href: project.data.demoUrl,
+    icon: "demo",
+  });
+}
+
+if (project.data.paperUrl) {
+  resourceLinks.push({
+    label: "Paper",
+    href: project.data.paperUrl,
+    icon: "paper",
+  });
+}
+---
+
+<BaseLayout
+  title={`${project.data.title} | Quantitative Finance Club @ UCF`}
+  description={project.data.description}
+  jsonLd={projectJsonLd(project)}
+>
+  <article>
+    <Container class="py-16 sm:py-24">
+      <div class="max-w-content">
+        <a class="text-sm font-semibold underline" href="/projects/">
+          All projects
+        </a>
+        <header class="mt-10">
+          <h1
+            class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl"
+          >
+            {project.data.title}
+          </h1>
+          <p class="text-muted-foreground mt-6 text-lg leading-8 text-pretty">
+            {project.data.description}
+          </p>
+          {
+            project.data.topics.length > 0 && (
+              <BoxList
+                items={project.data.topics}
+                label="Project topics"
+                kind="tag"
+                class="mt-7"
+              />
+            )
+          }
+          {
+            resourceLinks.length > 0 && (
+              <ResourceLinks
+                links={resourceLinks}
+                label={`${project.data.title} resources`}
+                class="mt-7"
+              />
+            )
+          }
+        </header>
+        <MarkdownBody>
+          <Content />
+        </MarkdownBody>
+      </div>
+    </Container>
+  </article>
+</BaseLayout>

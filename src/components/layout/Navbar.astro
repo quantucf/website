@@ -1,0 +1,156 @@
+---
+import ThemeControl from "../ui/ThemeControl.astro";
+import Container from "./Container.astro";
+
+const navigation = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about/" },
+  { label: "Events", href: "/events/" },
+  { label: "Projects", href: "/projects/" },
+  { label: "Posts", href: "/posts/" },
+  { label: "Officers", href: "/officers/" },
+  { label: "Sponsors", href: "/sponsors/" },
+];
+
+const currentPath = Astro.url.pathname;
+
+function normalizePath(path: string) {
+  if (path === "/") return "/";
+
+  return `/${path.replace(/^\/|\/$/g, "")}/`;
+}
+
+function isActiveNavigationPath(href: string) {
+  const normalizedCurrentPath = normalizePath(currentPath);
+  const normalizedHref = normalizePath(href);
+
+  if (normalizedHref === "/") {
+    return normalizedCurrentPath === "/";
+  }
+
+  return (
+    normalizedCurrentPath === normalizedHref ||
+    normalizedCurrentPath.startsWith(normalizedHref)
+  );
+}
+
+const isJoinActive = isActiveNavigationPath("/join/");
+---
+
+<header class="border-border bg-background sticky top-0 z-50 border-b">
+  <Container class="flex min-h-20 items-center justify-between gap-5 py-4">
+    <a
+      class="text-foreground max-w-56 text-sm leading-5 font-semibold tracking-tight"
+      href="/"
+    >
+      Quantitative Finance Club @ UCF
+    </a>
+
+    <div class="ml-auto flex items-center gap-4" data-header-actions>
+      <nav class="hidden lg:block" aria-label="Primary navigation">
+        <ul class="flex items-center gap-5">
+          {
+            navigation.map((item) => {
+              const isActive = isActiveNavigationPath(item.href);
+
+              return (
+                <li>
+                  <a
+                    class:list={[
+                      "hover:text-accent relative block py-2 text-sm font-medium transition-colors",
+                      isActive
+                        ? "text-accent after:bg-accent after:absolute after:right-0 after:-bottom-[1.18rem] after:left-0 after:h-0.5"
+                        : "text-muted-foreground",
+                    ]}
+                    href={item.href}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+
+      <a
+        class="bg-accent text-accent-foreground border-accent hover:bg-foreground hover:border-foreground hover:text-background hidden min-h-9 items-center border px-4 text-sm font-semibold transition-colors lg:inline-flex"
+        href="/join/"
+        aria-current={isJoinActive ? "page" : undefined}
+        data-primary-navigation-action
+      >
+        Join
+      </a>
+
+      <ThemeControl
+        id="theme-control-desktop"
+        class="border-border ml-1 hidden border-l pl-4 lg:flex"
+      />
+
+      <details class="relative lg:hidden">
+        <summary
+          class="border-border hover:bg-muted flex size-11 cursor-pointer list-none items-center justify-center border transition-colors"
+          aria-label="Toggle navigation"
+        >
+          <span class="sr-only">Toggle navigation</span>
+          <svg
+            class="size-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            aria-hidden="true"
+            data-menu-icon
+          >
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+        </summary>
+        <nav
+          class="border-border bg-background absolute top-[calc(100%+0.5rem)] right-0 z-40 w-56 border p-2"
+          aria-label="Mobile navigation"
+        >
+          <ul>
+            {
+              navigation.map((item) => {
+                const isActive = isActiveNavigationPath(item.href);
+
+                return (
+                  <li>
+                    <a
+                      class:list={[
+                        "block px-3 py-2.5 text-sm font-medium",
+                        isActive
+                          ? "bg-accent-muted text-accent"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                      ]}
+                      href={item.href}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                );
+              })
+            }
+            <li class="mt-2">
+              <a
+                class="bg-accent text-accent-foreground flex min-h-11 w-full items-center justify-center px-3 text-sm font-semibold"
+                href="/join/"
+                aria-current={isJoinActive ? "page" : undefined}
+                data-primary-navigation-action
+                data-mobile-join
+              >
+                Join
+              </a>
+            </li>
+            <li class="border-border mt-2 border-t px-3 pt-3">
+              <ThemeControl id="theme-control-mobile" />
+            </li>
+          </ul>
+        </nav>
+      </details>
+    </div>
+  </Container>
+</header>

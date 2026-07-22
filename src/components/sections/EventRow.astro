@@ -1,0 +1,66 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import EventMetadata from "./EventMetadata.astro";
+import ResourceLinks from "../ui/ResourceLinks.astro";
+import type { ResourceLink } from "../ui/ResourceLinks.astro";
+
+interface Props {
+  event: CollectionEntry<"events">["data"];
+  href?: string;
+  headingLevel?: "h2" | "h3";
+}
+
+const { event, href, headingLevel: Heading = "h3" } = Astro.props;
+const resourceLinks: ResourceLink[] = [];
+if (event.rsvpUrl) {
+  resourceLinks.push({
+    label: "RSVP",
+    href: event.rsvpUrl,
+    icon: "rsvp",
+  });
+}
+if (event.slidesUrl) {
+  resourceLinks.push({
+    label: "Slides",
+    href: event.slidesUrl,
+    icon: "slides",
+  });
+}
+if (event.recordingUrl) {
+  resourceLinks.push({
+    label: "Recording",
+    href: event.recordingUrl,
+    icon: "recording",
+  });
+}
+---
+
+<article class="border-border py-7">
+  <EventMetadata event={event} />
+  <div class="mt-5 max-w-2xl">
+    <Heading class="text-lg font-semibold">
+      {
+        href ? (
+          <a class="hover:underline" href={href}>
+            {event.title}
+          </a>
+        ) : (
+          event.title
+        )
+      }
+    </Heading>
+    <p class="mt-3 leading-7">{event.description}</p>
+    {
+      resourceLinks.length > 0 && (
+        <div data-event-resources>
+          <ResourceLinks
+            links={resourceLinks}
+            label={`${event.title} resources`}
+            class="mt-5"
+          />
+        </div>
+      )
+    }
+  </div>
+</article>

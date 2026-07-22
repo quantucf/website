@@ -1,0 +1,255 @@
+---
+import { getCollection } from "astro:content";
+
+import CardGrid from "../components/layout/CardGrid.astro";
+import Container from "../components/layout/Container.astro";
+import PageSection from "../components/layout/PageSection.astro";
+import SplitSection from "../components/layout/SplitSection.astro";
+import EventRow from "../components/sections/EventRow.astro";
+import ProjectCard from "../components/sections/ProjectCard.astro";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+import BoxList from "../components/ui/BoxList.astro";
+import EmptyState from "../components/ui/EmptyState.astro";
+import LinkButton from "../components/ui/LinkButton.astro";
+import LocalizedDate from "../components/ui/LocalizedDate.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { isUpcomingEvent, sortEventsAscending } from "../lib/archive";
+
+const now = new Date();
+const events = await getCollection("events");
+const projects = await getCollection("projects");
+const posts = await getCollection("posts");
+
+const upcomingEvents = events
+  .filter((event) => isUpcomingEvent(event, now))
+  .sort(sortEventsAscending);
+const currentProjects = projects
+  .filter((project) => project.data.status === "active")
+  .sort((left, right) => left.data.title.localeCompare(right.data.title));
+const latestPost = posts
+  .filter((post) => !post.data.draft)
+  .sort(
+    (left, right) => right.data.date.getTime() - left.data.date.getTime(),
+  )[0];
+---
+
+<BaseLayout>
+  <Container class="py-20 sm:py-24 lg:py-28">
+    <section class="max-w-4xl" aria-labelledby="page-title">
+      <h1
+        id="page-title"
+        class="text-4xl font-semibold tracking-tight text-balance sm:text-6xl lg:text-7xl"
+      >
+        Quantitative Finance Club @ UCF
+      </h1>
+
+      <p
+        class="text-muted-foreground mt-7 max-w-2xl text-lg leading-8 text-pretty sm:text-xl"
+      >
+        We give UCF students a place to explore financial markets through
+        mathematics, statistics, programming, and research.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <LinkButton href="/join/">Join the club</LinkButton>
+        <LinkButton href="/events/" variant="secondary"
+          >Explore events</LinkButton
+        >
+      </div>
+    </section>
+  </Container>
+
+  <PageSection>
+    <CardGrid columns={3}>
+      <article class="border-border bg-surface flex h-full flex-col border p-6">
+        <h2 class="text-accent text-xs font-semibold tracking-wider uppercase">
+          Our mission
+        </h2>
+        <p class="mt-4 max-w-sm leading-7">
+          To cultivate a community where UCF students can explore quantitative
+          finance, exchange ideas, and learn from one another.
+        </p>
+        <a
+          class="text-accent mt-auto inline-block pt-6 text-sm font-semibold"
+          href="/about/"
+        >
+          About the club →
+        </a>
+      </article>
+
+      <article class="border-border bg-surface flex h-full flex-col border p-6">
+        <h2 class="text-accent text-xs font-semibold tracking-wider uppercase">
+          What we do
+        </h2>
+        <p class="mt-4 max-w-sm leading-7">
+          We host workshops, research projects, guest talks, and career events
+          for students interested in quantitative finance.
+        </p>
+        <a
+          class="text-accent mt-auto inline-block pt-6 text-sm font-semibold"
+          href="/projects/"
+        >
+          Explore projects →
+        </a>
+      </article>
+
+      <article class="border-border bg-surface flex h-full flex-col border p-6">
+        <h2 class="text-accent text-xs font-semibold tracking-wider uppercase">
+          Who we are
+        </h2>
+        <p class="mt-4 max-w-sm leading-7">
+          Students interested in mathematics, statistics, and programming who
+          want to approach financial markets with technical rigor.
+        </p>
+        <a
+          class="text-accent mt-auto inline-block pt-6 text-sm font-semibold"
+          href="/officers/"
+        >
+          Meet the officers →
+        </a>
+      </article>
+    </CardGrid>
+  </PageSection>
+
+  <PageSection>
+    <SplitSection variant="sidebar">
+      <div>
+        <div class="flex items-end justify-between gap-6">
+          <h2
+            class="text-accent text-xs leading-5 font-semibold tracking-wider uppercase"
+          >
+            Upcoming events
+          </h2>
+          <a class="text-accent text-sm font-semibold" href="/events/"
+            >All events →</a
+          >
+        </div>
+        <div
+          class="mt-5 [&>article+article]:border-t [&>article:first-child]:pt-0"
+        >
+          {
+            upcomingEvents.length > 0 ? (
+              upcomingEvents
+                .slice(0, 3)
+                .map((event) => (
+                  <EventRow event={event.data} href={`/events/${event.id}/`} />
+                ))
+            ) : (
+              <EmptyState
+                subject={events.length === 0 ? "events" : "upcoming events"}
+              />
+            )
+          }
+        </div>
+      </div>
+
+      <aside aria-labelledby="latest-post-title">
+        <h2
+          id="latest-post-title"
+          class="text-accent text-xs leading-5 font-semibold tracking-wider uppercase"
+        >
+          Latest post
+        </h2>
+        {
+          latestPost ? (
+            <div class="mt-5">
+              <p class="text-muted-foreground text-sm">
+                <LocalizedDate
+                  date={latestPost.data.date}
+                  format="date"
+                  dateStyle="long"
+                  timeZone="UTC"
+                />
+                {latestPost.data.author && (
+                  <>
+                    <span aria-hidden="true">{" · "}</span>
+                    <span class="sr-only">{", "}</span>
+                    <span>{latestPost.data.author}</span>
+                  </>
+                )}
+              </p>
+              <h3 class="mt-3 text-lg font-semibold tracking-tight">
+                <a class="hover:underline" href={`/posts/${latestPost.id}/`}>
+                  {latestPost.data.title}
+                </a>
+              </h3>
+              <p class="text-muted-foreground mt-3 text-sm leading-6">
+                {latestPost.data.description}
+              </p>
+              {latestPost.data.topics.length > 0 && (
+                <BoxList
+                  items={latestPost.data.topics}
+                  label="Post topics"
+                  kind="tag"
+                  class="mt-4"
+                />
+              )}
+              <a
+                class="text-accent mt-7 inline-block text-sm font-semibold"
+                href={`/posts/${latestPost.id}/`}
+              >
+                Read post →
+              </a>
+            </div>
+          ) : (
+            <EmptyState subject="posts" class="mt-5" />
+          )
+        }
+      </aside>
+    </SplitSection>
+  </PageSection>
+
+  <PageSection>
+    <div class="flex items-end justify-between gap-6">
+      <h2 class="text-accent text-xs font-semibold tracking-wider uppercase">
+        Current projects
+      </h2>
+      <a class="text-accent text-sm font-semibold" href="/projects/"
+        >All projects →</a
+      >
+    </div>
+    {
+      currentProjects.length > 0 ? (
+        <CardGrid class="mt-6">
+          {currentProjects.map((project) => (
+            <ProjectCard
+              project={project.data}
+              href={`/projects/${project.id}/`}
+              showStatus={false}
+            />
+          ))}
+        </CardGrid>
+      ) : (
+        <EmptyState
+          subject={projects.length === 0 ? "projects" : "active projects"}
+          class="mt-6"
+        />
+      )
+    }
+  </PageSection>
+
+  <PageSection>
+    <SplitSection>
+      <div>
+        <SectionHeader
+          title="For students"
+          description="Students from any major can attend events, join projects, and get involved with the club."
+        />
+        <div class="mt-6">
+          <LinkButton href="/join/">How to join</LinkButton>
+        </div>
+      </div>
+      <div>
+        <SectionHeader
+          title="For sponsors"
+          description="Support workshops, guest talks, competitions, and research initiatives that expand opportunities for UCF students."
+        />
+        <div class="mt-6">
+          <LinkButton href="/sponsors/" variant="secondary">
+            Sponsor the club
+          </LinkButton>
+        </div>
+      </div>
+    </SplitSection>
+  </PageSection>
+</BaseLayout>
