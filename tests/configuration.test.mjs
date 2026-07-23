@@ -55,15 +55,15 @@ test("pairs every hover utility with equivalent pressed feedback", async () => {
   }
 });
 
-test("keeps touch feedback neutral in iOS Safari", async () => {
+test("uses custom touch feedback without the iOS Safari overlay", async () => {
   const styles = await readSource("src/styles/global.css");
   const layout = await readSource("src/layouts/BaseLayout.astro");
   const navigation = await readSource("src/components/layout/Navbar.astro");
 
-  assert.doesNotMatch(styles, /-webkit-tap-highlight-color/);
+  assert.match(styles, /-webkit-tap-highlight-color:\s*transparent/);
   assert.match(styles, /@media \(hover: none\) and \(pointer: coarse\)/);
   assert.match(styles, /:where\(a, button, summary\):active/);
-  assert.match(styles, /transition-duration:\s*0ms/);
+  assert.match(styles, /transition:\s*none/);
   assert.match(
     layout,
     /addEventListener\("touchstart", \(\) => \{\}, \{ passive: true \}\)/,

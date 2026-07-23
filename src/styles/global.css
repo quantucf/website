@@ -112,8 +112,12 @@
 }
 
 @media (hover: none) and (pointer: coarse) {
+  :where(a, button, summary) {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   :where(a, button, summary):active {
-    transition-duration: 0ms;
+    transition: none;
   }
 }
 
