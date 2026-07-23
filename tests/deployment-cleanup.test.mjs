@@ -205,6 +205,10 @@ test("uses trusted workflow context with least-privilege deployment access", asy
     workflow,
     /ref:\s*\$\{\{\s*github\.event\.repository\.default_branch\s*\}\}/,
   );
+  assert.match(
+    workflow,
+    /hashFiles\('\.github\/scripts\/cleanup-deployments\.cjs'\)\s*!=\s*''/,
+  );
   assert.match(workflow, /persist-credentials:\s*false/);
   assert.doesNotMatch(workflow, /github\.event\.pull_request\.head/);
 });

@@ -35,6 +35,7 @@ jobs:
           persist-credentials: false
 
       - name: Remove stale deployment records
+        if: ${{ hashFiles('.github/scripts/cleanup-deployments.cjs') != '' }}
         uses: actions/github-script@v8
         with:
           script: |
