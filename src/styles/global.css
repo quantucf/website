@@ -85,6 +85,10 @@
     text-underline-offset: 0.2em;
   }
 
+  [data-mobile-navigation] a {
+    -webkit-user-drag: none;
+  }
+
   :focus-visible {
     outline: 2px solid var(--color-foreground);
     outline-offset: 3px;
@@ -104,6 +108,12 @@
 
   html[data-theme="dark"] [data-theme-track]::after {
     transform: translateX(1rem);
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  :where(a, button, summary):active {
+    transition-duration: 0ms;
   }
 }
 

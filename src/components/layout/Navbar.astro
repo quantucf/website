@@ -110,6 +110,7 @@ const isJoinActive = isActiveNavigationPath("/join/");
         <nav
           class="border-border bg-background absolute top-[calc(100%+0.5rem)] right-0 z-40 w-56 border p-2"
           aria-label="Mobile navigation"
+          data-mobile-navigation
         >
           <ul>
             {
@@ -120,12 +121,13 @@ const isJoinActive = isActiveNavigationPath("/join/");
                   <li>
                     <a
                       class:list={[
-                        "block px-3 py-2.5 text-sm font-medium",
+                        "block touch-manipulation px-3 py-2.5 text-sm font-medium select-none",
                         isActive
                           ? "bg-accent-muted text-accent"
                           : "text-muted-foreground hover:bg-muted hover:text-foreground active:bg-muted active:text-foreground",
                       ]}
                       href={item.href}
+                      draggable="false"
                       aria-current={isActive ? "page" : undefined}
                     >
                       {item.label}
@@ -136,8 +138,9 @@ const isJoinActive = isActiveNavigationPath("/join/");
             }
             <li class="mt-2">
               <a
-                class="bg-accent text-accent-foreground active:bg-foreground active:text-background flex min-h-11 w-full items-center justify-center px-3 text-sm font-semibold transition-colors"
+                class="bg-accent text-accent-foreground active:bg-foreground active:text-background flex min-h-11 w-full touch-manipulation items-center justify-center px-3 text-sm font-semibold transition-colors select-none"
                 href="/join/"
+                draggable="false"
                 aria-current={isJoinActive ? "page" : undefined}
                 data-primary-navigation-action
                 data-mobile-join
