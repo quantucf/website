@@ -8,9 +8,9 @@ const { href, variant = "primary" } = Astro.props;
 
 const variants = {
   primary:
-    "bg-accent text-accent-foreground border-accent hover:bg-foreground hover:border-foreground hover:text-background",
+    "bg-accent text-accent-foreground border-accent hover:bg-foreground hover:border-foreground hover:text-background active:bg-foreground active:border-foreground active:text-background",
   secondary:
-    "bg-background text-foreground border-foreground hover:bg-accent-muted hover:border-accent hover:text-accent",
+    "bg-background text-foreground border-foreground hover:bg-accent-muted hover:border-accent hover:text-accent active:bg-accent-muted active:border-accent active:text-accent",
 };
 ---
 

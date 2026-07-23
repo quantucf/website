@@ -160,3 +160,34 @@ test("does not publish placeholder external resources", async () => {
     );
   }
 });
+
+test("keeps published event times and locations TBD", async () => {
+  for (const event of await collectionEntries("events")) {
+    const startDate = frontmatterValue(event.source, "startDate")?.replaceAll(
+      '"',
+      "",
+    );
+    const endDate = frontmatterValue(event.source, "endDate")?.replaceAll(
+      '"',
+      "",
+    );
+
+    assert.match(
+      startDate ?? "",
+      /^\d{4}-\d{2}-\d{2}$/,
+      `${event.fileName} should retain its date without a meeting time`,
+    );
+    if (endDate) {
+      assert.match(
+        endDate,
+        /^\d{4}-\d{2}-\d{2}$/,
+        `${event.fileName} should not publish an end time`,
+      );
+    }
+    assert.equal(
+      frontmatterValue(event.source, "location"),
+      "TBD",
+      `${event.fileName} should keep its location TBD`,
+    );
+  }
+});

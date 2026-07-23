@@ -2,7 +2,7 @@
 title: Risk Management
 description: Examine how strategies and portfolios are managed when estimates are unreliable, market relationships change, and model assumptions fail.
 eventType: meeting
-startDate: "2027-03-24T19:00:00-04:00"
+startDate: "2027-03-24"
 location: TBD
 ---
 

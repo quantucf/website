@@ -2,7 +2,7 @@
 title: Factor Models
 description: Use factor models to explain returns, measure portfolio exposures, and construct systematic strategies.
 eventType: meeting
-startDate: "2027-02-03T19:00:00-05:00"
+startDate: "2027-02-03"
 location: TBD
 ---
 

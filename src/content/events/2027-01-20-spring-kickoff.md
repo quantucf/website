@@ -2,7 +2,7 @@
 title: Spring Kickoff
 description: Welcome new and returning members and outline the club’s plans for Spring 2027.
 eventType: info-session
-startDate: "2027-01-20T19:00:00-05:00"
+startDate: "2027-01-20"
 location: TBD
 ---
 

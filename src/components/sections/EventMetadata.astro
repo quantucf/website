@@ -69,25 +69,31 @@ const spansMultipleDates =
     }
   </span>
   {
-    event.startDate && !startDateOnly && (
+    event.startDate && (
       <span
         class="text-muted-foreground inline-flex items-center gap-1.5"
         data-metadata-icon="clock"
       >
         <Icon name="clock" class="size-3.5" />
-        <LocalizedDate
-          date={event.startDate}
-          format="time"
-          timeZone={clubTimeZone}
-        />
-        {event.endDate && (
+        {startDateOnly ? (
+          "TBD"
+        ) : (
           <>
-            {" – "}
             <LocalizedDate
-              date={event.endDate}
+              date={event.startDate}
               format="time"
               timeZone={clubTimeZone}
             />
+            {event.endDate && (
+              <>
+                {" – "}
+                <LocalizedDate
+                  date={event.endDate}
+                  format="time"
+                  timeZone={clubTimeZone}
+                />
+              </>
+            )}
           </>
         )}
       </span>

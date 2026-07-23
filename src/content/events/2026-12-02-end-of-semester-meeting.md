@@ -2,7 +2,7 @@
 title: End-of-Semester Meeting
 description: Close out Fall 2026 with a recap, member presentations, and a preview of what comes next.
 eventType: meeting
-startDate: "2026-12-02T19:00:00-05:00"
+startDate: "2026-12-02"
 location: TBD
 ---
 

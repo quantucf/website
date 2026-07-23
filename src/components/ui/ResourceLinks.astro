@@ -21,7 +21,7 @@ const { links, label, class: className } = Astro.props;
     links.map((link) => (
       <li>
         <a
-          class="border-border text-muted-foreground hover:border-accent hover:text-accent inline-flex min-h-9 items-center gap-2 border bg-transparent px-3 py-2 text-sm font-semibold transition-colors"
+          class="border-border text-muted-foreground hover:border-accent hover:text-accent active:border-accent active:text-accent inline-flex min-h-9 items-center gap-2 border bg-transparent px-3 py-2 text-sm font-semibold transition-colors"
           href={link.href}
           aria-label={`${link.label}: ${label}`}
           target="_blank"

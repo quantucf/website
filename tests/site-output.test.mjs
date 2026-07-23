@@ -224,6 +224,23 @@ test("uses consistent empty states across collection pages", async () => {
   }
 });
 
+test("renders published meeting times and locations as TBD", async () => {
+  for (const event of await collectionEntries("events")) {
+    const html = await readRoute(`/events/${event.id}/`);
+
+    assert.match(
+      html,
+      /data-metadata-icon="clock"[^>]*>[\s\S]*?TBD[\s\S]*?<\/span>/,
+      `${event.fileName} should render its meeting time as TBD`,
+    );
+    assert.match(
+      html,
+      /data-metadata-icon="location"[^>]*>[\s\S]*?TBD[\s\S]*?<\/span>/,
+      `${event.fileName} should render its location as TBD`,
+    );
+  }
+});
+
 test("resolves every internal link, fragment, and generated asset", async () => {
   for (const filePath of await builtHtmlFiles()) {
     const route = routeFromOutputPath(filePath);

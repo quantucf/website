@@ -169,7 +169,10 @@ const latestPost = posts
                 )}
               </p>
               <h3 class="mt-3 text-lg font-semibold tracking-tight">
-                <a class="hover:underline" href={`/posts/${latestPost.id}/`}>
+                <a
+                  class="hover:underline active:underline"
+                  href={`/posts/${latestPost.id}/`}
+                >
                   {latestPost.data.title}
                 </a>
               </h3>

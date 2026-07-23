@@ -2,7 +2,7 @@
 title: Journal Club
 description: Learn how to read quantitative finance research critically.
 eventType: research
-startDate: "2026-10-19T19:00:00-04:00"
+startDate: "2026-10-19"
 location: TBD
 ---
 

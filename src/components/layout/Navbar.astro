@@ -57,7 +57,7 @@ const isJoinActive = isActiveNavigationPath("/join/");
                 <li>
                   <a
                     class:list={[
-                      "hover:text-accent relative block py-2 text-sm font-medium transition-colors",
+                      "hover:text-accent active:text-accent relative block py-2 text-sm font-medium transition-colors",
                       isActive
                         ? "text-accent after:bg-accent after:absolute after:right-0 after:-bottom-[1.18rem] after:left-0 after:h-0.5"
                         : "text-muted-foreground",
@@ -75,7 +75,7 @@ const isJoinActive = isActiveNavigationPath("/join/");
       </nav>
 
       <a
-        class="bg-accent text-accent-foreground border-accent hover:bg-foreground hover:border-foreground hover:text-background hidden min-h-9 items-center border px-4 text-sm font-semibold transition-colors lg:inline-flex"
+        class="bg-accent text-accent-foreground border-accent hover:bg-foreground hover:border-foreground hover:text-background active:bg-foreground active:border-foreground active:text-background hidden min-h-9 items-center border px-4 text-sm font-semibold transition-colors lg:inline-flex"
         href="/join/"
         aria-current={isJoinActive ? "page" : undefined}
         data-primary-navigation-action
@@ -88,9 +88,9 @@ const isJoinActive = isActiveNavigationPath("/join/");
         class="border-border ml-1 hidden border-l pl-4 lg:flex"
       />
 
-      <details class="relative lg:hidden">
+      <details class="group relative lg:hidden">
         <summary
-          class="border-border hover:bg-muted flex size-11 cursor-pointer list-none items-center justify-center border transition-colors"
+          class="border-border hover:bg-muted active:bg-muted group-open:bg-muted flex size-11 cursor-pointer list-none items-center justify-center border transition-colors"
           aria-label="Toggle navigation"
         >
           <span class="sr-only">Toggle navigation</span>
@@ -123,7 +123,7 @@ const isJoinActive = isActiveNavigationPath("/join/");
                         "block px-3 py-2.5 text-sm font-medium",
                         isActive
                           ? "bg-accent-muted text-accent"
-                          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground active:bg-muted active:text-foreground",
                       ]}
                       href={item.href}
                       aria-current={isActive ? "page" : undefined}
@@ -136,7 +136,7 @@ const isJoinActive = isActiveNavigationPath("/join/");
             }
             <li class="mt-2">
               <a
-                class="bg-accent text-accent-foreground flex min-h-11 w-full items-center justify-center px-3 text-sm font-semibold"
+                class="bg-accent text-accent-foreground active:bg-foreground active:text-background flex min-h-11 w-full items-center justify-center px-3 text-sm font-semibold transition-colors"
                 href="/join/"
                 aria-current={isJoinActive ? "page" : undefined}
                 data-primary-navigation-action
