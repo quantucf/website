@@ -1,0 +1,43 @@
+name: Deployment Cleanup
+
+on:
+  deployment_status:
+  pull_request_target:
+    types:
+      - closed
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: read
+
+concurrency:
+  group: deployment-cleanup
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    name: Clean up deployments
+    if: >-
+      github.event_name != 'deployment_status' ||
+      github.event.deployment_status.state == 'success' ||
+      github.event.deployment_status.state == 'failure' ||
+      github.event.deployment_status.state == 'error'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+
+      - name: Remove stale deployment records
+        if: ${{ hashFiles('.github/scripts/cleanup-deployments.cjs') != '' }}
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const cleanup = require("./.github/scripts/cleanup-deployments.cjs");
+            await cleanup({ github, context, core });
