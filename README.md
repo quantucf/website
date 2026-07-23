@@ -76,9 +76,9 @@ Run `pnpm build` and `pnpm test` sequentially because both write to `dist/`.
 
 ## Managing Content
 
-The site uses Astro content collections defined in
-[`src/content.config.ts`](src/content.config.ts). Each collection directory
-contains a hidden `.template.md` file with every supported frontmatter field:
+Content schemas are defined in
+[`src/content.config.ts`](src/content.config.ts). Use the corresponding template
+when adding content:
 
 | Collection | Template                                                                 |
 | ---------- | ------------------------------------------------------------------------ |
@@ -88,19 +88,18 @@ contains a hidden `.template.md` file with every supported frontmatter field:
 | Projects   | [`src/content/projects/.template.md`](src/content/projects/.template.md) |
 | Sponsors   | [`src/content/sponsors/.template.md`](src/content/sponsors/.template.md) |
 
-Copy the relevant template, remove the leading period from the new filename,
-and replace its example values. The filename becomes the entry's URL slug where
-the collection has detail pages.
+Copy the relevant template, rename the copy, and replace the example values.
+The filename is used in the URL for events, posts, and projects.
 
-Site-wide contact details and public channels are maintained in
-[`src/data/site-content.ts`](src/data/site-content.ts). Shared topic labels and
-event types are defined in [`src/lib/content.ts`](src/lib/content.ts) and
+Site-wide links and contact details are in
+[`src/data/site-content.ts`](src/data/site-content.ts). Topic labels and event
+types are defined in [`src/lib/content.ts`](src/lib/content.ts) and
 [`src/lib/events.ts`](src/lib/events.ts).
 
 ## Deployment
 
-Pull requests receive Vercel Preview deployments. Merges to `main` deploy to
-production at [quantucf.com](https://quantucf.com/).
+Pushes to branches other than `main` create Vercel Preview deployments. Pushes
+to `main` deploy to production at [quantucf.com](https://quantucf.com/).
 
 ## Contributing
 
