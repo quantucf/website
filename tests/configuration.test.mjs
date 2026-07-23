@@ -15,6 +15,21 @@ test("uses the expected Vercel static deployment settings", async () => {
   });
 });
 
+test("loads Vercel observability from the shared layout", async () => {
+  const layout = await readSource("src/layouts/BaseLayout.astro");
+  const packageManifest = JSON.parse(await readFile("package.json", "utf8"));
+
+  assert.ok(packageManifest.dependencies["@vercel/analytics"]);
+  assert.ok(packageManifest.dependencies["@vercel/speed-insights"]);
+  assert.match(layout, /import Analytics from "@vercel\/analytics\/astro"/);
+  assert.match(
+    layout,
+    /import SpeedInsights from "@vercel\/speed-insights\/astro"/,
+  );
+  assert.match(layout, /<Analytics \/>/);
+  assert.match(layout, /<SpeedInsights \/>/);
+});
+
 test("keeps the final UCF accent token consistent across themes", async () => {
   const styles = await readSource("src/styles/global.css");
   const lightAccent = styles.match(
