@@ -1,21 +1,8 @@
 # Website
 
-Source code for [quantucf.com](https://quantucf.com/), the official website of
-the Quantitative Finance Club @ UCF.
+Source code for [quantucf.com](https://quantucf.com/).
 
-## Features
-
-- Schema-validated content collections for events, officers, posts, projects,
-  and sponsors
-- Upcoming and past event listings with localized dates and archive pagination
-- Project and post archives generated from Markdown content
-- Responsive light and dark themes with accessible navigation and landmarks
-- Canonical metadata, Open Graph and Twitter cards, JSON-LD, sitemap, robots,
-  and `llms.txt` support
-- Automated checks for formatting, linting, types, routes, links, accessibility,
-  metadata, structured data, and content policy
-
-## Technology
+## Tech Stack
 
 - [Astro](https://astro.build/)
 - [TypeScript](https://www.typescriptlang.org/)
@@ -23,7 +10,7 @@ the Quantitative Finance Club @ UCF.
 - [pnpm](https://pnpm.io/)
 - Node.js 24 LTS
 
-## Getting started
+## Local Development
 
 ### Prerequisites
 
@@ -33,7 +20,7 @@ the Quantitative Finance Club @ UCF.
 No environment variables are required for local development or production
 builds.
 
-### Installation
+### Setup
 
 ```sh
 git clone https://github.com/quantucf/website.git
@@ -42,8 +29,6 @@ nvm use
 pnpm install --frozen-lockfile
 pnpm dev
 ```
-
-Astro prints the local development URL when the server starts.
 
 ## Commands
 
@@ -70,7 +55,7 @@ pnpm test
 
 Run `pnpm build` and `pnpm test` sequentially because both write to `dist/`.
 
-## Project structure
+## Project Structure
 
 ```text
 .
@@ -89,11 +74,11 @@ Run `pnpm build` and `pnpm test` sequentially because both write to `dist/`.
 └── vercel.json            Vercel build configuration
 ```
 
-## Managing content
+## Managing Content
 
-The site uses Astro content collections defined in
-[`src/content.config.ts`](src/content.config.ts). Each collection directory
-contains a hidden `.template.md` file with every supported frontmatter field:
+Content schemas are defined in
+[`src/content.config.ts`](src/content.config.ts). Use the corresponding template
+when adding content:
 
 | Collection | Template                                                                 |
 | ---------- | ------------------------------------------------------------------------ |
@@ -103,21 +88,18 @@ contains a hidden `.template.md` file with every supported frontmatter field:
 | Projects   | [`src/content/projects/.template.md`](src/content/projects/.template.md) |
 | Sponsors   | [`src/content/sponsors/.template.md`](src/content/sponsors/.template.md) |
 
-Copy the relevant template, remove the leading period from the new filename,
-and replace its example values. The filename becomes the entry's URL slug where
-the collection has detail pages.
+Copy the relevant template, rename the copy, and replace the example values.
+The filename is used in the URL for events, posts, and projects.
 
-Site-wide contact details and public channels are maintained in
-[`src/data/site-content.ts`](src/data/site-content.ts). Shared topic labels and
-event types are defined in [`src/lib/content.ts`](src/lib/content.ts) and
+Site-wide links and contact details are in
+[`src/data/site-content.ts`](src/data/site-content.ts). Topic labels and event
+types are defined in [`src/lib/content.ts`](src/lib/content.ts) and
 [`src/lib/events.ts`](src/lib/events.ts).
 
 ## Deployment
 
-The repository is configured for static deployment on Vercel. Vercel installs
-dependencies with the frozen pnpm lockfile, runs `pnpm build`, and publishes
-`dist/`. The production origin used for canonical URLs and the sitemap is
-`https://quantucf.com`.
+Pushes to branches other than `main` create Vercel Preview deployments. Pushes
+to `main` deploy to production at [quantucf.com](https://quantucf.com/).
 
 ## Contributing
 
@@ -126,9 +108,6 @@ dependencies with the frozen pnpm lockfile, runs `pnpm build`, and publishes
 3. Run the complete validation sequence.
 4. Commit using `<type>(<scope>): <summary>`.
 5. Push the branch and open a pull request.
-
-Repository-specific engineering and review requirements are documented in
-[`AGENTS.md`](AGENTS.md).
 
 ## License
 

@@ -1,6 +1,6 @@
 ---
 title: Introducing the Club Website
-description: Welcome to the official Quantitative Finance Club @ UCF website.
+description: Welcome to the official club website!
 date: 2026-07-19
 author: Miles Rack
 topics:
