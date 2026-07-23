@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 import { readSource } from "./helpers/site-output.mjs";
@@ -35,6 +35,35 @@ test("keeps primary button hover colours paired", async () => {
   assert.ok(primaryVariant, "Primary button variant should be defined");
   assert.match(primaryVariant, /hover:bg-foreground/);
   assert.match(primaryVariant, /hover:text-background/);
+});
+
+test("pairs every hover utility with equivalent pressed feedback", async () => {
+  const sourcePaths = (await readdir("src", { recursive: true }))
+    .filter((path) => /\.(astro|css|ts|tsx)$/.test(path))
+    .map((path) => `src/${path}`);
+
+  for (const sourcePath of sourcePaths) {
+    const source = await readSource(sourcePath);
+    const hoverUtilities = source.matchAll(/\bhover:([^\s"'`,}]+)/g);
+
+    for (const [, utility] of hoverUtilities) {
+      assert.ok(
+        source.includes(`active:${utility}`),
+        `${sourcePath} must pair hover:${utility} with active:${utility}`,
+      );
+    }
+  }
+});
+
+test("keeps touch feedback neutral in iOS Safari", async () => {
+  const styles = await readSource("src/styles/global.css");
+  const layout = await readSource("src/layouts/BaseLayout.astro");
+
+  assert.doesNotMatch(styles, /-webkit-tap-highlight-color/);
+  assert.match(
+    layout,
+    /addEventListener\("touchstart", \(\) => \{\}, \{ passive: true \}\)/,
+  );
 });
 
 test("localizes rendered dates with the end user's browser locale", async () => {

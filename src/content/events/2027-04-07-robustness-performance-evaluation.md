@@ -2,7 +2,7 @@
 title: Robustness and Performance Evaluation Workshop
 description: Test whether a strategy result is stable, economically meaningful, and likely to persist outside its original backtest.
 eventType: workshop
-startDate: "2027-04-07T19:00:00-04:00"
+startDate: "2027-04-07"
 location: TBD
 ---
 

@@ -20,7 +20,7 @@ const currentYear = new Date().getFullYear();
           footerSocialLinks.map((link) => (
             <li>
               <a
-                class="text-muted-foreground hover:text-accent inline-flex items-center gap-1.5 text-sm transition-colors"
+                class="text-muted-foreground hover:text-accent active:text-accent inline-flex items-center gap-1.5 text-sm transition-colors"
                 href={link.href}
                 aria-label={link.label}
                 target="_blank"
@@ -34,7 +34,7 @@ const currentYear = new Date().getFullYear();
         }
       </ul>
       <a
-        class="text-muted-foreground hover:text-accent inline-flex items-center gap-1.5 justify-self-start text-sm transition-colors md:justify-self-end"
+        class="text-muted-foreground hover:text-accent active:text-accent inline-flex items-center gap-1.5 justify-self-start text-sm transition-colors md:justify-self-end"
         href={footerEmailLink.href}
         aria-label={footerEmailLink.label}
         data-footer-email

@@ -2,7 +2,7 @@
 title: Market Microstructure Workshop
 description: Examine how markets process orders and why theoretical strategy returns differ from realized trading returns.
 eventType: workshop
-startDate: "2026-11-09T19:00:00-05:00"
+startDate: "2026-11-09"
 location: TBD
 ---
 

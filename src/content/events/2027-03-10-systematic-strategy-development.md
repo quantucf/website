@@ -2,7 +2,7 @@
 title: Systematic Strategy Development Workshop
 description: Combine earlier material from the semester into a complete, reproducible research pipeline.
 eventType: workshop
-startDate: "2027-03-10T19:00:00-05:00"
+startDate: "2027-03-10"
 location: TBD
 ---
 

@@ -2,7 +2,7 @@
 title: End-of-Semester Meeting
 description: Close out Spring 2027 with a recap, member presentations, and plans for the 2027–28 academic year.
 eventType: meeting
-startDate: "2027-04-14T19:00:00-04:00"
+startDate: "2027-04-14"
 location: TBD
 ---
 

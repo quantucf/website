@@ -27,7 +27,7 @@ const { post } = Astro.props;
   </div>
   <div class="max-w-2xl">
     <h2 class="text-xl font-semibold tracking-tight">
-      <a class="hover:underline" href={`/posts/${post.id}/`}>
+      <a class="hover:underline active:underline" href={`/posts/${post.id}/`}>
         {post.data.title}
       </a>
     </h2>

@@ -2,7 +2,7 @@
 title: Fixed Income Primer
 description: Compare fixed-income instruments, risks, and quantitative relationships with their equity-market counterparts.
 eventType: meeting
-startDate: "2027-02-17T19:00:00-05:00"
+startDate: "2027-02-17"
 location: TBD
 ---
 

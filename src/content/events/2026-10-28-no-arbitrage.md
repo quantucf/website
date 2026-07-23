@@ -2,7 +2,7 @@
 title: No-Arbitrage Workshop
 description: Use replication and no-arbitrage reasoning to understand option pricing.
 eventType: workshop
-startDate: "2026-10-28T19:00:00-04:00"
+startDate: "2026-10-28"
 location: TBD
 ---
 

@@ -120,6 +120,9 @@ const pageJsonLd = [
   <body
     class="bg-background text-foreground flex min-h-screen flex-col antialiased"
   >
+    <script is:inline>
+      document.addEventListener("touchstart", () => {}, { passive: true });
+    </script>
     <a
       class="bg-foreground text-background fixed -top-20 left-4 z-50 px-4 py-2 text-sm font-medium focus-visible:top-4"
       href="#main-content"

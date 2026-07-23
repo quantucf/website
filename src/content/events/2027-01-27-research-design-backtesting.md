@@ -2,7 +2,7 @@
 title: Research Design and Backtesting Workshop
 description: Learn how to construct a backtest that avoids common sources of bias.
 eventType: workshop
-startDate: "2027-01-27T19:00:00-05:00"
+startDate: "2027-01-27"
 location: TBD
 ---
 
