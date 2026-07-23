@@ -40,6 +40,8 @@
   },
   "dependencies": {
     "@lucide/astro": "^1.23.0",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "simple-icons": "^16.24.1"
   }
 }

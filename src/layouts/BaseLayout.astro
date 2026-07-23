@@ -1,4 +1,7 @@
 ---
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
+
 import Footer from "../components/layout/Footer.astro";
 import Navbar from "../components/layout/Navbar.astro";
 import {
@@ -134,5 +137,7 @@ const pageJsonLd = [
       <slot />
     </main>
     <Footer />
+    <Analytics />
+    <SpeedInsights />
   </body>
 </html>
