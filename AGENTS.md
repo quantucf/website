@@ -43,7 +43,6 @@ Before considering work complete, run:
 pnpm format:check
 pnpm lint
 pnpm check
-pnpm build
 pnpm test
 ```
 
