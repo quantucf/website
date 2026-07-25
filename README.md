@@ -17,9 +17,6 @@ Source code for [quantucf.com](https://quantucf.com/).
 - Node.js 24, matching `.nvmrc`
 - pnpm 11
 
-No environment variables are required for local development or production
-builds.
-
 ### Setup
 
 ```sh
@@ -43,17 +40,14 @@ pnpm dev
 | `pnpm check`        | Run Astro and TypeScript diagnostics          |
 | `pnpm test`         | Build the site and run the Node.js test suite |
 
-Run the complete local validation sequence before opening a pull request:
+Before opening a pull request, please run the following validation sequence:
 
 ```sh
-pnpm format:check
+pnpm format
 pnpm lint
 pnpm check
-pnpm build
 pnpm test
 ```
-
-Run `pnpm build` and `pnpm test` sequentially because both write to `dist/`.
 
 ## Project Structure
 
@@ -78,7 +72,7 @@ Run `pnpm build` and `pnpm test` sequentially because both write to `dist/`.
 
 Content schemas are defined in
 [`src/content.config.ts`](src/content.config.ts). Use the corresponding template
-when adding content:
+when adding new content:
 
 | Collection | Template                                                                 |
 | ---------- | ------------------------------------------------------------------------ |
@@ -88,9 +82,6 @@ when adding content:
 | Projects   | [`src/content/projects/.template.md`](src/content/projects/.template.md) |
 | Sponsors   | [`src/content/sponsors/.template.md`](src/content/sponsors/.template.md) |
 
-Copy the relevant template, rename the copy, and replace the example values.
-The filename is used in the URL for events, posts, and projects.
-
 Site-wide links and contact details are in
 [`src/data/site-content.ts`](src/data/site-content.ts). Topic labels and event
 types are defined in [`src/lib/content.ts`](src/lib/content.ts) and
@@ -98,15 +89,15 @@ types are defined in [`src/lib/content.ts`](src/lib/content.ts) and
 
 ## Deployment
 
-Pushes to branches other than `main` create Vercel Preview deployments. Pushes
-to `main` deploy to production at [quantucf.com](https://quantucf.com/).
+Pushing to a feature branch creates a Vercel Preview deployment. Pushing
+to `main` deploys to production.
 
 ## Contributing
 
-1. Create a focused branch from `main`.
-2. Make a small, coherent change.
+1. Create a feature branch from `main`.
+2. Make changes based on logical units of work.
 3. Run the complete validation sequence.
-4. Commit using `<type>(<scope>): <summary>`.
+4. Commit using the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/#summary) (`<type>(<scope>): <summary>`).
 5. Push the branch and open a pull request.
 
 ## License
