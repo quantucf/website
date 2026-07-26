@@ -23,7 +23,7 @@
 @layer base {
   :root {
     color-scheme: light;
-    --theme-background: #fafafa;
+    --theme-background: #f8f8f8;
     --theme-foreground: #09090b;
     --theme-muted: #f4f4f5;
     --theme-muted-foreground: #52525b;
