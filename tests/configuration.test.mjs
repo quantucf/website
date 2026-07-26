@@ -42,6 +42,32 @@ test("keeps the final UCF accent token consistent across themes", async () => {
   assert.equal(darkAccent, lightAccent);
 });
 
+test("uses accessible foreground colours for accent typography", async () => {
+  const sourcePaths = (await readdir("src", { recursive: true }))
+    .filter((path) => /\.(astro|css|ts|tsx)$/.test(path))
+    .map((path) => `src/${path}`);
+
+  for (const sourcePath of sourcePaths) {
+    const source = await readSource(sourcePath);
+
+    assert.doesNotMatch(
+      source,
+      /\b(?:hover:|active:)?text-accent(?!-)/,
+      `${sourcePath} must not use brand yellow as a foreground utility`,
+    );
+  }
+
+  const styles = await readSource("src/styles/global.css");
+  assert.match(
+    styles,
+    /\.accent-text\s*\{[^}]*color:\s*var\(--color-foreground\)/,
+  );
+  assert.match(
+    styles,
+    /html\[data-theme="dark"\]\s+\.accent-text\s*\{[^}]*color:\s*var\(--color-accent\)/,
+  );
+});
+
 test("publishes an llms.txt file that follows the proposal and Lighthouse checks", async () => {
   const llmsText = await readFile(staticOutputPath("llms.txt"), "utf8");
   const [preamble, ...sectionParts] = llmsText.split(/^##\s+(.+)\s*$/m);

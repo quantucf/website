@@ -57,9 +57,9 @@ const isJoinActive = isActiveNavigationPath("/join/");
                 <li>
                   <a
                     class:list={[
-                      "hover:text-accent active:text-accent relative block py-2 text-sm font-medium transition-colors",
+                      "hover:text-foreground active:text-foreground relative block py-2 text-sm font-medium transition-colors",
                       isActive
-                        ? "text-accent after:bg-accent after:absolute after:right-0 after:-bottom-[1.18rem] after:left-0 after:h-0.5"
+                        ? "text-foreground after:bg-accent after:absolute after:right-0 after:-bottom-[1.18rem] after:left-0 after:h-0.5"
                         : "text-muted-foreground",
                     ]}
                     href={item.href}
@@ -123,7 +123,7 @@ const isJoinActive = isActiveNavigationPath("/join/");
                       class:list={[
                         "block touch-manipulation px-3 py-2.5 text-sm font-medium select-none",
                         isActive
-                          ? "bg-accent-muted text-accent"
+                          ? "border-accent bg-accent-muted text-foreground border-l-2"
                           : "text-muted-foreground hover:bg-muted hover:text-foreground active:bg-muted active:text-foreground",
                       ]}
                       href={item.href}
