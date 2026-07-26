@@ -111,6 +111,16 @@
   }
 }
 
+@layer utilities {
+  .accent-text {
+    color: var(--color-foreground);
+  }
+
+  html[data-theme="dark"] .accent-text {
+    color: var(--color-accent);
+  }
+}
+
 @media (hover: none) and (pointer: coarse) {
   :where(a, button, summary) {
     -webkit-tap-highlight-color: transparent;

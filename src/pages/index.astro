@@ -62,7 +62,9 @@ const latestPost = posts
   <PageSection>
     <CardGrid columns={3}>
       <article class="border-border bg-surface flex h-full flex-col border p-6">
-        <h2 class="text-accent text-xs font-semibold tracking-wider uppercase">
+        <h2
+          class="accent-text border-accent border-l-2 pl-2 text-xs font-semibold tracking-wider uppercase"
+        >
           Our mission
         </h2>
         <p class="mt-4 max-w-sm leading-7">
@@ -70,7 +72,7 @@ const latestPost = posts
           finance, exchange ideas, and learn from one another.
         </p>
         <a
-          class="text-accent mt-auto inline-block pt-6 text-sm font-semibold"
+          class="text-foreground mt-auto inline-block pt-6 text-sm font-semibold hover:underline active:underline"
           href="/about/"
         >
           About the club →
@@ -78,7 +80,9 @@ const latestPost = posts
       </article>
 
       <article class="border-border bg-surface flex h-full flex-col border p-6">
-        <h2 class="text-accent text-xs font-semibold tracking-wider uppercase">
+        <h2
+          class="accent-text border-accent border-l-2 pl-2 text-xs font-semibold tracking-wider uppercase"
+        >
           What we do
         </h2>
         <p class="mt-4 max-w-sm leading-7">
@@ -86,7 +90,7 @@ const latestPost = posts
           for students interested in quantitative finance.
         </p>
         <a
-          class="text-accent mt-auto inline-block pt-6 text-sm font-semibold"
+          class="text-foreground mt-auto inline-block pt-6 text-sm font-semibold hover:underline active:underline"
           href="/projects/"
         >
           Explore projects →
@@ -94,7 +98,9 @@ const latestPost = posts
       </article>
 
       <article class="border-border bg-surface flex h-full flex-col border p-6">
-        <h2 class="text-accent text-xs font-semibold tracking-wider uppercase">
+        <h2
+          class="accent-text border-accent border-l-2 pl-2 text-xs font-semibold tracking-wider uppercase"
+        >
           Who we are
         </h2>
         <p class="mt-4 max-w-sm leading-7">
@@ -102,7 +108,7 @@ const latestPost = posts
           want to approach financial markets with technical rigor.
         </p>
         <a
-          class="text-accent mt-auto inline-block pt-6 text-sm font-semibold"
+          class="text-foreground mt-auto inline-block pt-6 text-sm font-semibold hover:underline active:underline"
           href="/officers/"
         >
           Meet the officers →
@@ -116,12 +122,13 @@ const latestPost = posts
       <div>
         <div class="flex items-end justify-between gap-6">
           <h2
-            class="text-accent text-xs leading-5 font-semibold tracking-wider uppercase"
+            class="accent-text border-accent border-l-2 pl-2 text-xs leading-5 font-semibold tracking-wider uppercase"
           >
             Upcoming events
           </h2>
-          <a class="text-accent text-sm font-semibold" href="/events/"
-            >All events →</a
+          <a
+            class="text-foreground text-sm font-semibold hover:underline active:underline"
+            href="/events/">All events →</a
           >
         </div>
         <div
@@ -146,7 +153,7 @@ const latestPost = posts
       <aside aria-labelledby="latest-post-title">
         <h2
           id="latest-post-title"
-          class="text-accent text-xs leading-5 font-semibold tracking-wider uppercase"
+          class="accent-text border-accent border-l-2 pl-2 text-xs leading-5 font-semibold tracking-wider uppercase"
         >
           Latest post
         </h2>
@@ -188,7 +195,7 @@ const latestPost = posts
                 />
               )}
               <a
-                class="text-accent mt-7 inline-block text-sm font-semibold"
+                class="text-foreground mt-7 inline-block text-sm font-semibold hover:underline active:underline"
                 href={`/posts/${latestPost.id}/`}
               >
                 Read post →
@@ -204,11 +211,14 @@ const latestPost = posts
 
   <PageSection>
     <div class="flex items-end justify-between gap-6">
-      <h2 class="text-accent text-xs font-semibold tracking-wider uppercase">
+      <h2
+        class="accent-text border-accent border-l-2 pl-2 text-xs font-semibold tracking-wider uppercase"
+      >
         Current projects
       </h2>
-      <a class="text-accent text-sm font-semibold" href="/projects/"
-        >All projects →</a
+      <a
+        class="text-foreground text-sm font-semibold hover:underline active:underline"
+        href="/projects/">All projects →</a
       >
     </div>
     {

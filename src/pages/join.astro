@@ -62,7 +62,7 @@ import Icon from "../components/ui/Icon.astro";
         joinChannels.map((channel) => (
           <li>
             <a
-              class="border-border bg-surface hover:border-accent hover:text-accent active:border-accent active:text-accent inline-flex min-h-11 items-center gap-2 border px-4 py-3 text-sm font-semibold transition-colors"
+              class="border-border bg-surface hover:border-accent hover:text-foreground active:border-accent active:text-foreground inline-flex min-h-11 items-center gap-2 border px-4 py-3 text-sm font-semibold transition-colors"
               href={channel.href}
               data-channel-link={channel.label}
               target="_blank"
@@ -77,7 +77,7 @@ import Icon from "../components/ui/Icon.astro";
       <li>
         <a
           id="contact"
-          class="border-border bg-surface hover:border-accent hover:text-accent active:border-accent active:text-accent inline-flex min-h-11 scroll-mt-8 items-center gap-2 border px-4 py-3 text-sm font-semibold transition-colors"
+          class="border-border bg-surface hover:border-accent hover:text-foreground active:border-accent active:text-foreground inline-flex min-h-11 scroll-mt-8 items-center gap-2 border px-4 py-3 text-sm font-semibold transition-colors"
           href={`mailto:${contactEmail}`}
         >
           <Icon name="email" />
