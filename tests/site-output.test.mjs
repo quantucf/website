@@ -176,6 +176,20 @@ test("builds required routes, published content, and pagination", async () => {
   assert.deepEqual(actualPaginatedRoutes, expectedPaginatedRoutes);
 });
 
+test("inlines stylesheets to avoid a render-blocking request", async () => {
+  for (const filePath of await builtHtmlFiles()) {
+    const route = routeFromOutputPath(filePath);
+    const html = await readFile(filePath, "utf8");
+
+    assert.match(html, /<style(?:\s[^>]*)?>[\s\S]*?<\/style>/);
+    assert.doesNotMatch(
+      html,
+      /<link\b[^>]*\brel="stylesheet"[^>]*>/,
+      `${route} must not load a render-blocking stylesheet`,
+    );
+  }
+});
+
 test("uses consistent empty states across collection pages", async () => {
   const expectations = [
     ["/events/", "events"],
