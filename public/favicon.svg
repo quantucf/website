@@ -14,7 +14,7 @@
 
     @media (prefers-color-scheme: light) {
       .background {
-        fill: #ffffff;
+        fill: #f8f8f8;
       }
 
       .cell {
