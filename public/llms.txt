@@ -1,57 +1,36 @@
 # Quantitative Finance Club @ UCF
 
-Quantitative Finance Club @ UCF gives students a place to explore financial markets through mathematics, statistics, programming, and research.
+> Quantitative Finance Club @ UCF is a University of Central Florida student organization where students explore financial markets through mathematics, statistics, programming, and research.
 
-The club organizes workshops, research initiatives, projects, guest talks, career events, and discussions about financial markets.
+The club hosts workshops, research projects, guest talks, and career events for students interested in quantitative finance.
 
-## Key Pages
+Topics covered:
 
-- Home: https://quantucf.com/
-- About: https://quantucf.com/about/
-- Events: https://quantucf.com/events/
-- Projects: https://quantucf.com/projects/
-- Posts: https://quantucf.com/posts/
-- Officers: https://quantucf.com/officers/
-- Sponsors: https://quantucf.com/sponsors/
-- Join: https://quantucf.com/join/
+- Quantitative finance, financial markets, and quantitative research
+- Probability, statistics, econometrics, and time series analysis
+- Programming, market data, data analysis, data engineering, alternative data, machine learning, optimization, and numerical methods
+- Financial modeling, asset pricing, portfolio construction, portfolio optimization, and factor investing
+- Risk management, backtesting, algorithmic trading, systematic trading, and trading strategies
+- Market making, execution, transaction costs, and market microstructure
+- Derivatives, options, volatility, fixed income, and yield curves
+- Stochastic processes, Monte Carlo methods, empirical finance, and research methods
 
-## Topics
+## Club
 
-- Quantitative finance
-- Financial markets
-- Quantitative research
-- Market data
-- Probability
-- Statistics
-- Econometrics
-- Time series analysis
-- Machine learning
-- Optimization
-- Numerical methods
-- Programming
-- Data analysis
-- Data engineering
-- Financial modeling
-- Asset pricing
-- Portfolio construction
-- Portfolio optimization
-- Risk management
-- Factor investing
-- Backtesting
-- Algorithmic trading
-- Systematic trading
-- Trading strategies
-- Market making
-- Execution
-- Transaction costs
-- Derivatives
-- Options
-- Volatility
-- Fixed income
-- Yield curves
-- Market microstructure
-- Alternative data
-- Stochastic processes
-- Monte Carlo methods
-- Empirical finance
-- Research methods
+- [Home](https://quantucf.com/): Overview of the club, upcoming events, recent posts, and current projects.
+- [About](https://quantucf.com/about/): The club's purpose, activities, and how it works.
+- [Join](https://quantucf.com/join/): Membership options, official community channels, and contact details.
+
+## Activities
+
+- [Events](https://quantucf.com/events/): Upcoming workshops, talks, meetings, and event details.
+- [Projects](https://quantucf.com/projects/): Student quantitative finance research projects, including their objectives, methods, and status.
+
+## Publications
+
+- [Posts](https://quantucf.com/posts/): Club news, announcements, and educational resources.
+
+## Optional
+
+- [Officers](https://quantucf.com/officers/): Current student leadership.
+- [Sponsors](https://quantucf.com/sponsors/): Sponsorship opportunities and information for organizations interested in supporting the club.

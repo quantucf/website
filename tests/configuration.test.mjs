@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
-import { readSource } from "./helpers/site-output.mjs";
+import { readSource, staticOutputPath } from "./helpers/site-output.mjs";
 
 test("uses the expected Vercel static deployment settings", async () => {
   const config = JSON.parse(await readFile("vercel.json", "utf8"));
@@ -38,9 +38,49 @@ test("keeps the final UCF accent token consistent across themes", async () => {
   const darkAccent = styles.match(
     /html\[data-theme="dark"\]\s*{[\s\S]*?--theme-accent:\s*(#[0-9a-f]+);/i,
   )?.[1];
-
   assert.equal(lightAccent, "#ffc904");
   assert.equal(darkAccent, lightAccent);
+});
+
+test("publishes an llms.txt file that follows the proposal and Lighthouse checks", async () => {
+  const llmsText = await readFile(staticOutputPath("llms.txt"), "utf8");
+  const [preamble, ...sectionParts] = llmsText.split(/^##\s+(.+)\s*$/m);
+
+  assert.ok(llmsText.length >= 50);
+  assert.equal((llmsText.match(/^#\s+.+/gm) ?? []).length, 1);
+  assert.match(preamble, /^#\s+.+/);
+  assert.match(preamble, /^>\s+.+/m);
+  assert.equal(sectionParts.length % 2, 0);
+
+  const sectionTitles = [];
+  const linkedUrls = new Set();
+
+  for (let index = 0; index < sectionParts.length; index += 2) {
+    const title = sectionParts[index].trim();
+    const lines = sectionParts[index + 1].trim().split(/\n+/);
+
+    sectionTitles.push(title);
+    assert.ok(lines.length > 0, `${title} must contain at least one link`);
+
+    for (const line of lines) {
+      const link = line.match(
+        /^-\s+\[([^\]]+)\]\((https:\/\/[^)]+)\)(?::\s+(.+))?$/,
+      );
+
+      assert.ok(link, `${title} contains an invalid file-list item: ${line}`);
+      assert.equal(
+        linkedUrls.has(link[2]),
+        false,
+        `${link[2]} must be listed only once`,
+      );
+      linkedUrls.add(link[2]);
+    }
+  }
+
+  const optionalIndex = sectionTitles.indexOf("Optional");
+  if (optionalIndex >= 0) {
+    assert.equal(optionalIndex, sectionTitles.length - 1);
+  }
 });
 
 test("keeps primary button hover colours paired", async () => {
