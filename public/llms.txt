@@ -2,7 +2,7 @@
 
 > Quantitative Finance Club @ UCF is a University of Central Florida student organization where students explore financial markets through mathematics, statistics, programming, and research.
 
-The club hosts workshops, research projects, guest talks, and career events for students interested in quantitative finance.
+The club hosts workshops, research projects, guest speaker events, and career events for students interested in quantitative finance.
 
 Topics covered:
 
