@@ -19,7 +19,7 @@ Source code for [quantucf.com](https://quantucf.com/).
 
 ### Setup
 
-```sh
+```text
 git clone https://github.com/quantucf/website.git
 cd website
 nvm use
@@ -42,7 +42,7 @@ pnpm dev
 
 Before opening a pull request, please run the following validation sequence:
 
-```sh
+```text
 pnpm format
 pnpm lint
 pnpm check
