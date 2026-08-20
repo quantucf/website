@@ -6,6 +6,7 @@ import Container from "../components/layout/Container.astro";
 import PageSection from "../components/layout/PageSection.astro";
 import SplitSection from "../components/layout/SplitSection.astro";
 import EventRow from "../components/sections/EventRow.astro";
+import ProjectCard from "../components/sections/ProjectCard.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import BoxList from "../components/ui/BoxList.astro";
 import EmptyState from "../components/ui/EmptyState.astro";
@@ -16,11 +17,15 @@ import { isUpcomingEvent, sortEventsAscending } from "../lib/archive";
 
 const now = new Date();
 const events = await getCollection("events");
+const projects = await getCollection("projects");
 const posts = await getCollection("posts");
 
 const upcomingEvents = events
   .filter((event) => isUpcomingEvent(event, now))
   .sort(sortEventsAscending);
+const currentProjects = projects
+  .filter((project) => project.data.status === "active")
+  .sort((left, right) => left.data.title.localeCompare(right.data.title));
 const latestPost = posts
   .filter((post) => !post.data.draft)
   .sort(
@@ -84,6 +89,12 @@ const latestPost = posts
           We host workshops, research projects, guest speaker events, and career
           events for students interested in quantitative finance.
         </p>
+        <a
+          class="text-foreground mt-auto inline-block pt-6 text-sm font-semibold hover:underline active:underline"
+          href="/projects/"
+        >
+          Explore projects →
+        </a>
       </article>
 
       <article class="border-border bg-surface flex h-full flex-col border p-6">
@@ -196,6 +207,38 @@ const latestPost = posts
         }
       </aside>
     </SplitSection>
+  </PageSection>
+
+  <PageSection>
+    <div class="flex items-end justify-between gap-6">
+      <h2
+        class="accent-text border-accent border-l-2 pl-2 text-xs font-semibold tracking-wider uppercase"
+      >
+        Current projects
+      </h2>
+      <a
+        class="text-foreground text-sm font-semibold hover:underline active:underline"
+        href="/projects/">All projects →</a
+      >
+    </div>
+    {
+      currentProjects.length > 0 ? (
+        <CardGrid class="mt-6">
+          {currentProjects.map((project) => (
+            <ProjectCard
+              project={project.data}
+              href={`/projects/${project.id}/`}
+              showStatus={false}
+            />
+          ))}
+        </CardGrid>
+      ) : (
+        <EmptyState
+          subject={projects.length === 0 ? "projects" : "active projects"}
+          class="mt-6"
+        />
+      )
+    }
   </PageSection>
 
   <PageSection>

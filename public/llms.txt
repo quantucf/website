@@ -17,13 +17,14 @@ Topics covered:
 
 ## Club
 
-- [Home](https://quantucf.com/): Overview of the club, upcoming events, and recent posts.
+- [Home](https://quantucf.com/): Overview of the club, upcoming events, recent posts, and current projects.
 - [About](https://quantucf.com/about/): The club's purpose, activities, and how it works.
 - [Join](https://quantucf.com/join/): Membership options, official community channels, and contact details.
 
 ## Activities
 
 - [Events](https://quantucf.com/events/): Upcoming workshops, talks, meetings, and event details.
+- [Projects](https://quantucf.com/projects/): Student quantitative finance research projects, including their objectives, methods, and status.
 
 ## Publications
 

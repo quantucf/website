@@ -1,0 +1,90 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import { formatLabel } from "../../lib/content";
+import BoxList from "../ui/BoxList.astro";
+import ResourceLinks from "../ui/ResourceLinks.astro";
+import type { ResourceLink } from "../ui/ResourceLinks.astro";
+
+interface Props {
+  project: CollectionEntry<"projects">["data"];
+  href?: string;
+  showStatus?: boolean;
+  headingLevel?: "h2" | "h3";
+}
+
+const {
+  project,
+  href,
+  showStatus = true,
+  headingLevel: Heading = "h3",
+} = Astro.props;
+const resourceLinks: ResourceLink[] = [];
+if (project.githubUrl) {
+  resourceLinks.push({
+    label: "GitHub",
+    href: project.githubUrl,
+    icon: "github",
+  });
+}
+if (project.demoUrl) {
+  resourceLinks.push({
+    label: "Demo",
+    href: project.demoUrl,
+    icon: "demo",
+  });
+}
+if (project.paperUrl) {
+  resourceLinks.push({
+    label: "Paper",
+    href: project.paperUrl,
+    icon: "paper",
+  });
+}
+---
+
+<article class="border-border bg-surface flex h-full flex-col border p-6">
+  {
+    showStatus && (
+      <BoxList
+        items={[formatLabel(project.status)]}
+        label="Project status"
+        kind="status"
+      />
+    )
+  }
+  <Heading
+    class:list={["text-xl font-semibold tracking-tight", showStatus && "mt-3"]}
+  >
+    {
+      href ? (
+        <a class="hover:underline active:underline" href={href}>
+          {project.title}
+        </a>
+      ) : (
+        project.title
+      )
+    }
+  </Heading>
+  <p class="text-muted-foreground mt-4 leading-7">{project.description}</p>
+  {
+    project.topics.length > 0 && (
+      <BoxList
+        items={project.topics}
+        label="Project topics"
+        kind="tag"
+        class="mt-6"
+      />
+    )
+  }
+  {
+    resourceLinks.length > 0 && (
+      <div class="mt-auto pt-5" data-project-resources>
+        <ResourceLinks
+          links={resourceLinks}
+          label={`${project.title} resources`}
+        />
+      </div>
+    )
+  }
+</article>

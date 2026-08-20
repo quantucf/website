@@ -4,8 +4,10 @@ import test from "node:test";
 import {
   isPastEvent,
   isUpcomingEvent,
+  sortCompletedProjects,
   sortEventsAscending,
   sortEventsDescending,
+  sortProjectsByTitle,
 } from "../src/lib/archive.ts";
 
 function event(startDate, title = "Event", endDate) {
@@ -18,6 +20,10 @@ function event(startDate, title = "Event", endDate) {
       endDate,
     },
   };
+}
+
+function project(title) {
+  return { data: { title } };
 }
 
 test("sorts events chronologically in both directions", () => {
@@ -75,4 +81,18 @@ test("keeps a date-only event current through its local calendar date", () => {
     true,
   );
   assert.equal(isPastEvent(dateOnly, new Date("2026-03-02T05:30:00Z")), true);
+});
+
+test("sorts project collections by title", () => {
+  const projects = [project("Volatility"), project("Alpha"), project("Risk")];
+  const expected = ["Alpha", "Risk", "Volatility"];
+
+  assert.deepEqual(
+    projects.toSorted(sortProjectsByTitle).map((item) => item.data.title),
+    expected,
+  );
+  assert.deepEqual(
+    projects.toSorted(sortCompletedProjects).map((item) => item.data.title),
+    expected,
+  );
 });

@@ -5,6 +5,17 @@ import { eventTimestamp, isDateOnly } from "./events.ts";
 export const POSTS_PER_PAGE = 10;
 export const ARCHIVE_PAGE_SIZE = 12;
 export const RECENT_PAST_EVENTS_LIMIT = 6;
+export const PROJECT_ARCHIVE_PREVIEW_LIMIT = 4;
+
+export const projectPrimaryStatuses = ["active", "planned"] as const;
+export const projectArchiveStatuses = ["completed"] as const;
+
+export const projectStatusLabels = {
+  active: "Active",
+  planned: "Planned",
+  completed: "Completed",
+};
+
 export function isPastEvent(
   event: CollectionEntry<"events">,
   now = new Date(),
@@ -82,4 +93,18 @@ export function sortEventsDescending(
   return (
     rightTime - leftTime || left.data.title.localeCompare(right.data.title)
   );
+}
+
+export function sortProjectsByTitle(
+  left: CollectionEntry<"projects">,
+  right: CollectionEntry<"projects">,
+) {
+  return left.data.title.localeCompare(right.data.title);
+}
+
+export function sortCompletedProjects(
+  left: CollectionEntry<"projects">,
+  right: CollectionEntry<"projects">,
+) {
+  return sortProjectsByTitle(left, right);
 }
