@@ -7,7 +7,6 @@ import {
   ARCHIVE_PAGE_SIZE,
   isUpcomingEvent,
   POSTS_PER_PAGE,
-  PROJECT_ARCHIVE_PREVIEW_LIMIT,
   RECENT_PAST_EVENTS_LIMIT,
 } from "../src/lib/archive.ts";
 import {
@@ -120,13 +119,11 @@ test("builds required routes, published content, and pagination", async () => {
     assert.ok(routes.has(route), `Expected ${route} to be built`);
   }
 
-  for (const collection of ["events", "projects"]) {
-    for (const entry of await collectionEntries(collection)) {
-      assert.ok(
-        routes.has(`/${collection}/${entry.id}/`),
-        `${collection}/${entry.fileName} should have a detail route`,
-      );
-    }
+  for (const event of await collectionEntries("events")) {
+    assert.ok(
+      routes.has(`/events/${event.id}/`),
+      `events/${event.fileName} should have a detail route`,
+    );
   }
 
   const posts = await collectionEntries("posts");
@@ -149,9 +146,6 @@ test("builds required routes, published content, and pagination", async () => {
 
     return eventEnd ? new Date(eventEnd).getTime() < now : false;
   });
-  const completedProjects = (await collectionEntries("projects")).filter(
-    (project) => frontmatterValue(project.source, "status") === "completed",
-  );
   const expectedPaginatedRoutes = [
     ...pageRoutes("/posts/", publishedPosts.length, POSTS_PER_PAGE),
     ...archivePageRoutes(
@@ -159,17 +153,12 @@ test("builds required routes, published content, and pagination", async () => {
       pastEvents.length,
       RECENT_PAST_EVENTS_LIMIT,
     ),
-    ...archivePageRoutes(
-      "/projects/archive/",
-      completedProjects.length,
-      PROJECT_ARCHIVE_PREVIEW_LIMIT,
-    ),
   ].sort();
   const actualPaginatedRoutes = [...routes]
     .filter(
       (route) =>
         /^\/posts\/(?:\d+\/)?$/.test(route) ||
-        /^\/(?:events|projects)\/archive\/(?:\d+\/)?$/.test(route),
+        /^\/events\/archive\/(?:\d+\/)?$/.test(route),
     )
     .sort();
 
@@ -194,7 +183,6 @@ test("uses consistent empty states across collection pages", async () => {
   const expectations = [
     ["/events/", "events"],
     ["/posts/", "posts"],
-    ["/projects/", "projects"],
     ["/sponsors/", "sponsors"],
   ];
 
@@ -231,7 +219,7 @@ test("uses consistent empty states across collection pages", async () => {
     );
   }
 
-  for (const subject of ["posts", "projects"]) {
+  for (const subject of ["posts"]) {
     if ((await collectionEntries(subject)).length === 0) {
       assert.match(home, emptyStatePattern(subject));
     }
@@ -409,12 +397,6 @@ test("publishes valid structured data for every generated page", async () => {
         );
       }
     }
-    if (/^\/projects\/(?!archive\/)[^/]+\/$/.test(route)) {
-      const project = byType.get("CreativeWork");
-      assert.ok(project, `${route} needs CreativeWork data`);
-      assert.equal(project.url, canonical);
-      assert.ok(project.name);
-    }
   }
 });
 
@@ -500,7 +482,6 @@ test("marks the active top-level navigation destination", async () => {
     ["/", "/"],
     ["/about/", "/about/"],
     ["/events/", "/events/"],
-    ["/projects/", "/projects/"],
     ["/posts/", "/posts/"],
     ["/officers/", "/officers/"],
     ["/sponsors/", "/sponsors/"],

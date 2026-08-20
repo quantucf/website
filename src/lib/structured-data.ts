@@ -116,25 +116,6 @@ export function eventJsonLd(
   return eventData;
 }
 
-export function projectJsonLd(project: CollectionEntry<"projects">): JsonLd {
-  const data = project.data;
-  const canonicalUrl = absoluteUrl(`/projects/${project.id}/`);
-  const sameAs = [data.githubUrl, data.demoUrl, data.paperUrl].filter(Boolean);
-
-  return {
-    "@type": "CreativeWork",
-    "@id": `${canonicalUrl}#project`,
-    mainEntityOfPage: { "@id": `${canonicalUrl}#webpage` },
-    name: data.title,
-    description: data.description,
-    url: canonicalUrl,
-    creator: { "@id": organizationId },
-    publisher: { "@id": organizationId },
-    keywords: data.topics,
-    ...(sameAs.length > 0 ? { sameAs } : {}),
-  };
-}
-
 export function jsonLdScript(graph: JsonLd[]) {
   return JSON.stringify({
     "@context": "https://schema.org",

@@ -4,8 +4,6 @@ import {
   ARCHIVE_PAGE_SIZE,
   isPastEvent,
   POSTS_PER_PAGE,
-  PROJECT_ARCHIVE_PREVIEW_LIMIT,
-  projectArchiveStatuses,
   RECENT_PAST_EVENTS_LIMIT,
 } from "../lib/archive";
 import { absoluteUrl } from "../lib/site";
@@ -39,25 +37,18 @@ function xmlEscape(value: string) {
 
 export async function GET() {
   const now = new Date();
-  const [events, posts, projects] = await Promise.all([
+  const [events, posts] = await Promise.all([
     getCollection("events"),
     getCollection("posts"),
-    getCollection("projects"),
   ]);
 
   const publishedPosts = posts.filter((post) => !post.data.draft);
   const pastEvents = events.filter((event) => isPastEvent(event, now));
-  const completedProjects = projects.filter((project) =>
-    projectArchiveStatuses.includes(
-      project.data.status as (typeof projectArchiveStatuses)[number],
-    ),
-  );
 
   const routes = [
     "/",
     "/about/",
     "/events/",
-    "/projects/",
     "/officers/",
     "/sponsors/",
     "/join/",
@@ -67,13 +58,7 @@ export async function GET() {
       pastEvents.length,
       RECENT_PAST_EVENTS_LIMIT,
     ),
-    ...archivePageRoutes(
-      "/projects/archive/",
-      completedProjects.length,
-      PROJECT_ARCHIVE_PREVIEW_LIMIT,
-    ),
     ...events.map((event) => `/events/${event.id}/`),
-    ...projects.map((project) => `/projects/${project.id}/`),
     ...publishedPosts.map((post) => `/posts/${post.id}/`),
   ];
 

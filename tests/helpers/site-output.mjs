@@ -7,7 +7,6 @@ export const requiredRoutes = [
   "/",
   "/about/",
   "/events/",
-  "/projects/",
   "/officers/",
   "/sponsors/",
   "/join/",
