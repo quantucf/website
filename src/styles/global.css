@@ -95,7 +95,8 @@
   }
 
   ::selection {
-    background: var(--color-accent-muted);
+    background: var(--color-accent);
+    color: var(--color-accent-foreground);
   }
 
   [data-theme-track] {

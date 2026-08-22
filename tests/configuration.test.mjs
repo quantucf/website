@@ -28,6 +28,24 @@ test("loads Vercel observability from the shared layout", async () => {
   );
   assert.match(layout, /<Analytics \/>/);
   assert.match(layout, /<SpeedInsights \/>/);
+
+  const sourcePaths = (await readdir("src", { recursive: true }))
+    .filter((path) => /\.(astro|js|mjs|ts|tsx)$/.test(path))
+    .map((path) => `src/${path}`);
+
+  for (const sourcePath of sourcePaths) {
+    const source = await readSource(sourcePath);
+    const sourceWithoutDefaultAnalytics =
+      sourcePath === "src/layouts/BaseLayout.astro"
+        ? source.replace('import Analytics from "@vercel/analytics/astro";', "")
+        : source;
+
+    assert.doesNotMatch(
+      sourceWithoutDefaultAnalytics,
+      /@vercel\/analytics/,
+      `${sourcePath} must not add custom Vercel Analytics events`,
+    );
+  }
 });
 
 test("keeps the final UCF accent token consistent across themes", async () => {
@@ -65,6 +83,19 @@ test("uses accessible foreground colours for accent typography", async () => {
   assert.match(
     styles,
     /html\[data-theme="dark"\]\s+\.accent-text\s*\{[^}]*color:\s*var\(--color-accent\)/,
+  );
+});
+
+test("uses the high-contrast accent colours for text selection", async () => {
+  const styles = await readSource("src/styles/global.css");
+
+  assert.match(
+    styles,
+    /::selection\s*{[^}]*background:\s*var\(--color-accent\)/,
+  );
+  assert.match(
+    styles,
+    /::selection\s*{[^}]*color:\s*var\(--color-accent-foreground\)/,
   );
 });
 
