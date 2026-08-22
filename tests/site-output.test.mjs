@@ -13,7 +13,6 @@ import {
 import {
   footerEmailLink,
   footerSocialLinks,
-  joinChannels,
 } from "../src/data/site-content.ts";
 import {
   builtHtmlFiles,
@@ -30,6 +29,32 @@ import {
   staticOutputPath,
   tagAttribute,
 } from "./helpers/site-output.mjs";
+
+const expectedKnightConnectHref =
+  "https://knightconnect.campuslabs.com/engage/organization/quantativefinanceclub";
+const expectedDuesOptions = [
+  {
+    id: "semester",
+    label: "Fall 2026 Semester Dues",
+    priceLabel: "$20",
+  },
+  {
+    id: "academic-year",
+    label: "2026–27 Academic Year Dues",
+    priceLabel: "$35",
+  },
+];
+const expectedJoinSocialLinks = [
+  { label: "Discord", href: "https://discord.gg/5rAzsYDT9e" },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/quantucf/",
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/quantucf/",
+  },
+];
 
 function pageRoutes(baseRoute, itemCount, pageSize) {
   const pageCount = Math.max(1, Math.ceil(itemCount / pageSize));
@@ -533,18 +558,71 @@ test("marks the active top-level navigation destination", async () => {
   }
 });
 
-test("renders every configured public channel in its intended surface", async () => {
+test("renders the approved three-step joining flow", async () => {
   const join = await readRoute("/join/");
-  const home = await readRoute("/");
+  const joinMetadata = metadata(join);
 
-  for (const channel of joinChannels) {
+  assert.equal(
+    joinMetadata.description,
+    "Join Quantitative Finance Club @ UCF. Register on KnightConnect, choose a dues option, and stay connected with the club.",
+  );
+  assert.match(join, /<h1[^>]*>\s*Join\s*<\/h1>/);
+  assert.match(join, /<h2[^>]*>\s*How to join\s*<\/h2>/);
+  assert.deepEqual(
+    [...join.matchAll(/data-join-step="(\d{2})"/g)].map((match) => match[1]),
+    ["01", "02", "03"],
+  );
+  for (const heading of [
+    "Join on KnightConnect",
+    "Pay dues",
+    "Stay connected",
+  ]) {
+    assert.match(join, new RegExp(`>${escapeRegExp(heading)}<`));
+  }
+  assert.match(
+    join,
+    new RegExp(
+      `data-join-link="KnightConnect"[^>]*href="${escapeRegExp(expectedKnightConnectHref)}"|href="${escapeRegExp(expectedKnightConnectHref)}"[^>]*data-join-link="KnightConnect"`,
+    ),
+  );
+
+  for (const option of expectedDuesOptions) {
     assert.match(
       join,
       new RegExp(
-        `data-channel-link="${escapeRegExp(channel.label)}"[^>]*href="${escapeRegExp(channel.href)}"|href="${escapeRegExp(channel.href)}"[^>]*data-channel-link="${escapeRegExp(channel.label)}"`,
+        `data-dues-option="${escapeRegExp(option.id)}"[\\s\\S]*?>${escapeRegExp(option.label)}<[\\s\\S]*?>${escapeRegExp(option.priceLabel)}<`,
+      ),
+    );
+
+    assert.match(
+      join,
+      new RegExp(
+        `data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*aria-disabled="true"|aria-disabled="true"[^>]*data-dues-link-placeholder="${escapeRegExp(option.id)}"`,
       ),
     );
   }
+
+  for (const channel of expectedJoinSocialLinks) {
+    assert.match(
+      join,
+      new RegExp(
+        `data-join-link="${escapeRegExp(channel.label)}"[^>]*href="${escapeRegExp(channel.href)}"|href="${escapeRegExp(channel.href)}"[^>]*data-join-link="${escapeRegExp(channel.label)}"`,
+      ),
+    );
+  }
+
+  assert.doesNotMatch(join, /<h2[^>]*>\s*Contact\s*<\/h2>/);
+  assert.doesNotMatch(join, /href="\/join\/#contact"/);
+  assert.doesNotMatch(
+    join,
+    /covers?\s+two\s+semesters?|sav(?:e|es|ing|ings)\b/i,
+  );
+  assert.doesNotMatch(join, /data-join-link="(?:Email|GitHub)"/);
+});
+
+test("renders every configured footer channel", async () => {
+  const home = await readRoute("/");
+
   for (const link of footerSocialLinks) {
     assert.match(home, new RegExp(`href="${escapeRegExp(link.href)}"`));
   }
@@ -552,4 +630,16 @@ test("renders every configured public channel in its intended surface", async ()
     home,
     new RegExp(`href="${escapeRegExp(footerEmailLink.href)}"`),
   );
+});
+
+test("links the sponsor contact action directly to email", async () => {
+  const sponsors = await readRoute("/sponsors/");
+
+  assert.match(
+    sponsors,
+    new RegExp(
+      `<a[^>]*href="${escapeRegExp(footerEmailLink.href)}"[^>]*>\\s*Contact us\\s*<\\/a>`,
+    ),
+  );
+  assert.doesNotMatch(sponsors, /href="\/join\/#contact"/);
 });

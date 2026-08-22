@@ -1,10 +1,17 @@
 ---
-interface Props {
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends Omit<HTMLAttributes<"a">, "href"> {
   href: string;
   variant?: "primary" | "secondary";
 }
 
-const { href, variant = "primary" } = Astro.props;
+const {
+  href,
+  variant = "primary",
+  class: className,
+  ...attributes
+} = Astro.props;
 
 const variants = {
   primary:
@@ -15,9 +22,11 @@ const variants = {
 ---
 
 <a
+  {...attributes}
   class:list={[
     "inline-flex min-h-11 items-center justify-center border px-5 py-2.5 text-sm font-semibold transition-colors",
     variants[variant],
+    className,
   ]}
   href={href}
 >
