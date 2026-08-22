@@ -5,6 +5,7 @@ import SectionHeader from "../components/sections/SectionHeader.astro";
 import SponsorRow from "../components/sections/SponsorRow.astro";
 import EmptyState from "../components/ui/EmptyState.astro";
 import LinkButton from "../components/ui/LinkButton.astro";
+import { footerEmailLink } from "../data/site-content";
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -73,7 +74,7 @@ const sponsors = (await getCollection("sponsors"))
       }
     </ul>
     <div class="mt-8">
-      <LinkButton href="/join/#contact">Contact us</LinkButton>
+      <LinkButton href={footerEmailLink.href}>Contact us</LinkButton>
     </div>
   </PageSection>
 </BaseLayout>

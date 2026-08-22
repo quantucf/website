@@ -3,9 +3,11 @@ import test from "node:test";
 import { URL } from "node:url";
 
 import {
+  duesOptions,
   footerEmailLink,
   footerSocialLinks,
-  joinChannels,
+  joinSocialLinks,
+  knightConnectLink,
 } from "../src/data/site-content.ts";
 import {
   collectionEntries,
@@ -139,7 +141,14 @@ test("does not publish placeholder external resources", async () => {
   }
 
   const configuredUrls = [
-    ...joinChannels.map((link) => [`joinChannels:${link.label}`, link.href]),
+    ["knightConnectLink", knightConnectLink.href],
+    ...joinSocialLinks.map((link) => [
+      `joinSocialLinks:${link.label}`,
+      link.href,
+    ]),
+    ...duesOptions
+      .filter((option) => option.href)
+      .map((option) => [`duesOptions:${option.id}`, option.href]),
     ...footerSocialLinks.map((link) => [
       `footerSocialLinks:${link.label}`,
       link.href,

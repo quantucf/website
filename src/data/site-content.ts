@@ -17,6 +17,15 @@ export interface SiteLink {
   icon: SiteIcon;
 }
 
+export interface DuesOption {
+  id: "semester" | "academic-year";
+  label: string;
+  priceLabel: string;
+  actionLabel: string;
+  href: string | null;
+  featured?: boolean;
+}
+
 const instagramLink: SiteLink = {
   label: "Instagram",
   href: "https://www.instagram.com/quantucf/",
@@ -35,7 +44,7 @@ const githubLink: SiteLink = {
   icon: "github",
 };
 
-const knightConnectLink: SiteLink = {
+export const knightConnectLink: SiteLink = {
   label: "KnightConnect",
   href: "https://knightconnect.campuslabs.com/engage/organization/quantativefinanceclub",
   icon: "university",
@@ -49,12 +58,28 @@ const discordLink: SiteLink = {
 
 export const contactEmail = "info@quantucf.com";
 
-export const joinChannels: SiteLink[] = [
-  knightConnectLink,
+export const joinSocialLinks: SiteLink[] = [
   discordLink,
   instagramLink,
   linkedinLink,
-  githubLink,
+];
+
+export const duesOptions: DuesOption[] = [
+  {
+    id: "semester",
+    label: "Fall 2026 Semester Dues",
+    priceLabel: "$20",
+    actionLabel: "Pay semester dues",
+    href: null,
+  },
+  {
+    id: "academic-year",
+    label: "2026–27 Academic Year Dues",
+    priceLabel: "$35",
+    actionLabel: "Pay academic year dues",
+    href: null,
+    featured: true,
+  },
 ];
 
 export const footerSocialLinks: SiteLink[] = [
