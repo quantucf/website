@@ -35,12 +35,12 @@ const expectedKnightConnectHref =
 const expectedDuesOptions = [
   {
     id: "semester",
-    label: "Fall 2026 Semester Dues",
+    label: "Fall 2026 Semester",
     priceLabel: "$20",
   },
   {
     id: "academic-year",
-    label: "2026–27 Academic Year Dues",
+    label: "2026–27 Academic Year",
     priceLabel: "$35",
   },
 ];
@@ -328,6 +328,13 @@ test("renders the approved page descriptions in heroes and metadata", async () =
         "Learn about Quantitative Finance Club @ UCF, a student organization dedicated to quantitative finance.",
     },
     {
+      route: "/events/",
+      visible:
+        "Workshops, guest speakers, recruiting events, and general meetings.",
+      metadata:
+        "Explore workshops, guest speaker events, recruiting events, and general meetings from Quantitative Finance Club @ UCF.",
+    },
+    {
       route: "/projects/",
       visible: "Student-led research and projects in quantitative finance.",
       metadata:
@@ -370,6 +377,12 @@ test("renders the approved page descriptions in heroes and metadata", async () =
   assert.equal(
     webmanifest.description,
     "Quantitative Finance Club @ UCF is a student organization dedicated to quantitative finance.",
+  );
+
+  const home = await readRoute("/");
+  assert.match(
+    home,
+    /<h2[^>]*>\s*For students\s*<\/h2>[\s\S]*?Open to UCF students of all majors interested in quantitative finance\./,
   );
 });
 
@@ -715,7 +728,7 @@ test("renders the approved three-step joining flow", async () => {
     join,
     /Membership dues help fund club operations and give members access to additional resources and exclusive opportunities\./,
   );
-  assert.match(join, /data-dues-divider[^>]*>[\s\S]*?\bor\b[\s\S]*?<\/li>/);
+  assert.doesNotMatch(join, /data-dues-divider/);
 
   for (const option of expectedDuesOptions) {
     assert.match(

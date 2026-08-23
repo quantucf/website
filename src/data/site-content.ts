@@ -66,13 +66,13 @@ export const joinSocialLinks: SiteLink[] = [
 export const duesOptions: DuesOption[] = [
   {
     id: "semester",
-    label: "Fall 2026 Semester Dues",
+    label: "Fall 2026 Semester",
     priceLabel: "$20",
     href: null,
   },
   {
     id: "academic-year",
-    label: "2026–27 Academic Year Dues",
+    label: "2026–27 Academic Year",
     priceLabel: "$35",
     href: null,
     featured: true,

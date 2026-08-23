@@ -23,7 +23,7 @@ Topics covered:
 
 ## Activities
 
-- [Events](https://quantucf.com/events/): Upcoming workshops, talks, meetings, and event details.
+- [Events](https://quantucf.com/events/): Workshops, guest speakers, recruiting events, general meetings, and event details.
 - [Projects](https://quantucf.com/projects/): Student-led research and projects in quantitative finance, including their objectives, methods, and status.
 
 ## Publications
