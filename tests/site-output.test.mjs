@@ -289,7 +289,7 @@ test("renders published meeting times and locations as TBD", async () => {
 
 test("uses the code XML icon for workshop events", async () => {
   const workshop = await readRoute(
-    "/events/2026-09-16-python-for-quantitative-finance/",
+    "/events/2026-09-23-python-for-quantitative-finance/",
   );
 
   assert.match(
@@ -300,7 +300,7 @@ test("uses the code XML icon for workshop events", async () => {
 
 test("classifies technical interview preparation as a workshop", async () => {
   const interviewPreparation = await readRoute(
-    "/events/2026-11-18-technical-interview-preparation/",
+    "/events/2026-11-25-technical-interview-preparation/",
   );
 
   assert.match(

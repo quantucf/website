@@ -2,7 +2,7 @@
 title: Portfolio Construction Workshop
 description: Apply expected returns, variance, covariance, and correlation to portfolio construction.
 eventType: workshop
-startDate: "2026-10-21"
+startDate: "2026-10-28"
 location: TBD
 ---
 
