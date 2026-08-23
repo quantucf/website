@@ -330,7 +330,7 @@ test("renders the approved page descriptions in heroes and metadata", async () =
     {
       route: "/events/",
       visible:
-        "Workshops, guest speakers, recruiting events, and general meetings.",
+        "Workshops, guest speaker events, recruiting events, general meetings, and more.",
       metadata:
         "Explore workshops, guest speaker events, recruiting events, and general meetings from Quantitative Finance Club @ UCF.",
     },
@@ -685,7 +685,7 @@ test("links the home activity summary to the detailed About section", async () =
 
   assert.match(
     home,
-    /<h2[^>]*>\s*What we do\s*<\/h2>\s*<p[^>]*>\s*We host events and organize student-led research and projects in quantitative finance\.\s*<\/p>[\s\S]*?<a[^>]*href="\/about\/#what-we-do"[^>]*>\s*See what we do →\s*<\/a>/,
+    /<h2[^>]*>\s*What we do\s*<\/h2>\s*<p[^>]*>\s*We host events and organize student-led research initiatives and projects for members to explore quantitative finance\.\s*<\/p>[\s\S]*?<a[^>]*href="\/about\/#what-we-do"[^>]*>\s*See what we do →\s*<\/a>/,
   );
   assert.match(
     about,
@@ -696,7 +696,7 @@ test("links the home activity summary to the detailed About section", async () =
   for (const [heading, description] of [
     [
       "Events",
-      "Workshops, guest speakers, recruiting events, and general meetings for students interested in quantitative finance.",
+      "Workshops, guest speaker events, recruiting events, general meetings, and more.",
     ],
     [
       "Research",
