@@ -679,6 +679,43 @@ test("publishes one canonical mission across the home and About pages", async ()
   assert.equal(plainText(aboutMission), plainText(homeMission));
 });
 
+test("links the home activity summary to the detailed About section", async () => {
+  const home = await readRoute("/");
+  const about = await readRoute("/about/");
+
+  assert.match(
+    home,
+    /<h2[^>]*>\s*What we do\s*<\/h2>\s*<p[^>]*>\s*We host events and organize student-led research and projects in quantitative finance\.\s*<\/p>[\s\S]*?<a[^>]*href="\/about\/#what-we-do"[^>]*>\s*See what we do →\s*<\/a>/,
+  );
+  assert.match(
+    about,
+    /<section[^>]*id="what-we-do"[^>]*>[\s\S]*?<h2[^>]*>\s*What we do\s*<\/h2>/,
+  );
+  assert.doesNotMatch(about, /How the club works/);
+
+  for (const [heading, description] of [
+    [
+      "Events",
+      "Workshops, guest speakers, recruiting events, and general meetings for students interested in quantitative finance.",
+    ],
+    [
+      "Research",
+      "Readings, replications, and research initiatives that explore markets, models, and financial theory.",
+    ],
+    [
+      "Projects",
+      "Student-led projects that explore research questions and build tools for quantitative finance.",
+    ],
+  ]) {
+    assert.match(
+      about,
+      new RegExp(
+        `<h3[^>]*>\\s*${escapeRegExp(heading)}\\s*<\\/h3>\\s*<p[^>]*>\\s*${escapeRegExp(description)}\\s*<\\/p>`,
+      ),
+    );
+  }
+});
+
 test("gives the home hero actions equal width only on small screens", async () => {
   const home = await readRoute("/");
   const actionGroup = home.match(
