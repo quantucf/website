@@ -35,12 +35,12 @@ const expectedKnightConnectHref =
 const expectedDuesOptions = [
   {
     id: "semester",
-    label: "Fall 2026 Semester Dues",
+    label: "Fall 2026 Semester",
     priceLabel: "$20",
   },
   {
     id: "academic-year",
-    label: "2026–27 Academic Year Dues",
+    label: "2026–27 Academic Year",
     priceLabel: "$35",
   },
 ];
@@ -108,6 +108,13 @@ function metadata(html) {
       /<meta property="article:published_time" content="([^"]+)"/,
     )?.[1],
   };
+}
+
+function plainText(html) {
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function emptyStatePattern(subject) {
@@ -278,6 +285,105 @@ test("renders published meeting times and locations as TBD", async () => {
       `${event.fileName} should render its location as TBD`,
     );
   }
+});
+
+test("uses the code XML icon for workshop events", async () => {
+  const workshop = await readRoute(
+    "/events/2026-09-16-python-for-quantitative-finance/",
+  );
+
+  assert.match(
+    workshop,
+    /data-event-type-icon="workshop"[^>]*class="[^"]*lucide-code-xml/,
+  );
+});
+
+test("classifies technical interview preparation as a workshop", async () => {
+  const interviewPreparation = await readRoute(
+    "/events/2026-11-18-technical-interview-preparation/",
+  );
+
+  assert.match(
+    interviewPreparation,
+    /data-event-type-icon="workshop"[^>]*class="[^"]*lucide-code-xml/,
+  );
+  assert.doesNotMatch(
+    interviewPreparation,
+    /data-event-type-icon="recruiting"/,
+  );
+});
+
+test("renders the approved page descriptions in heroes and metadata", async () => {
+  const pages = [
+    {
+      route: "/",
+      visible: "A student organization dedicated to quantitative finance.",
+      metadata:
+        "Quantitative Finance Club @ UCF is a student organization dedicated to quantitative finance.",
+    },
+    {
+      route: "/about/",
+      visible: "A student organization dedicated to quantitative finance.",
+      metadata:
+        "Learn about Quantitative Finance Club @ UCF, a student organization dedicated to quantitative finance.",
+    },
+    {
+      route: "/events/",
+      visible:
+        "Workshops, guest speakers, recruiting events, and general meetings.",
+      metadata:
+        "Explore workshops, guest speaker events, recruiting events, and general meetings from Quantitative Finance Club @ UCF.",
+    },
+    {
+      route: "/projects/",
+      visible: "Student-led research and projects in quantitative finance.",
+      metadata:
+        "Explore student-led research and projects in quantitative finance from Quantitative Finance Club @ UCF.",
+    },
+    {
+      route: "/officers/",
+      visible:
+        "Meet the students leading the club’s programs, projects, and operations.",
+      metadata:
+        "Meet the students leading Quantitative Finance Club @ UCF’s programs, projects, and operations.",
+    },
+    {
+      route: "/sponsors/",
+      visible:
+        "Support the club’s operations and expand opportunities for our members.",
+      metadata:
+        "Support Quantitative Finance Club @ UCF’s operations and expand opportunities for student members.",
+    },
+    {
+      route: "/posts/",
+      visible: "Announcements, resources, and updates from the club.",
+      metadata:
+        "Read announcements, resources, and updates from Quantitative Finance Club @ UCF.",
+    },
+  ];
+
+  for (const page of pages) {
+    const html = await readRoute(page.route);
+    assert.ok(
+      html.includes(page.visible),
+      `${page.route} needs the approved visible description`,
+    );
+    assert.equal(metadata(html).description, page.metadata);
+  }
+
+  const webmanifest = JSON.parse(
+    await readFile(staticOutputPath("site.webmanifest"), "utf8"),
+  );
+  assert.equal(
+    webmanifest.description,
+    "Quantitative Finance Club @ UCF is a student organization dedicated to quantitative finance.",
+  );
+
+  const home = await readRoute("/");
+  assert.match(
+    home,
+    /<h2[^>]*>\s*For students\s*<\/h2>[\s\S]*?Open to UCF students of all majors interested in quantitative finance\./,
+  );
 });
 
 test("resolves every internal link, fragment, and generated asset", async () => {
@@ -558,15 +664,47 @@ test("marks the active top-level navigation destination", async () => {
   }
 });
 
+test("publishes one canonical mission across the home and About pages", async () => {
+  const home = await readRoute("/");
+  const about = await readRoute("/about/");
+  const homeMission = home.match(
+    /<h2[^>]*>\s*Our mission\s*<\/h2>\s*<p[^>]*>([\s\S]*?)<\/p>/,
+  )?.[1];
+  const aboutMission = about.match(
+    /<h2[^>]*>\s*Mission\s*<\/h2>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/,
+  )?.[1];
+
+  assert.ok(homeMission, "The home page should publish the club mission");
+  assert.ok(aboutMission, "The About page should publish the club mission");
+  assert.equal(plainText(aboutMission), plainText(homeMission));
+});
+
+test("gives the home hero actions equal width only on small screens", async () => {
+  const home = await readRoute("/");
+  const actionGroup = home.match(
+    /<div[^>]*data-homepage-primary-actions[^>]*>/,
+  )?.[0];
+
+  assert.ok(actionGroup, "The home hero should expose its primary actions");
+  const className = tagAttribute(actionGroup, "class") ?? "";
+  assert.match(className, /\bgrid\b/);
+  assert.match(className, /\bgrid-cols-2\b/);
+  assert.match(className, /\bsm:flex\b/);
+});
+
 test("renders the approved three-step joining flow", async () => {
   const join = await readRoute("/join/");
   const joinMetadata = metadata(join);
 
   assert.equal(
     joinMetadata.description,
-    "Join Quantitative Finance Club @ UCF. Register on KnightConnect, choose a dues option, and stay connected with the club.",
+    "Join Quantitative Finance Club @ UCF. Membership is open to UCF students of all majors interested in quantitative finance.",
   );
-  assert.match(join, /<h1[^>]*>\s*Join\s*<\/h1>/);
+  assert.match(join, /<h1[^>]*>\s*Join us\s*<\/h1>/);
+  assert.match(
+    join,
+    /<h1[^>]*>\s*Join us\s*<\/h1>[\s\S]*?<p[^>]*>\s*Open to UCF students of all majors interested in quantitative finance\.\s*<\/p>/,
+  );
   assert.match(join, /<h2[^>]*>\s*How to join\s*<\/h2>/);
   assert.deepEqual(
     [...join.matchAll(/data-join-step="(\d{2})"/g)].map((match) => match[1]),
@@ -586,21 +724,42 @@ test("renders the approved three-step joining flow", async () => {
     ),
   );
 
+  assert.match(
+    join,
+    /Membership dues help fund club operations and give members access to additional resources and exclusive opportunities\./,
+  );
+  assert.doesNotMatch(join, /data-dues-divider/);
+
   for (const option of expectedDuesOptions) {
     assert.match(
       join,
       new RegExp(
-        `data-dues-option="${escapeRegExp(option.id)}"[\\s\\S]*?>${escapeRegExp(option.label)}<[\\s\\S]*?>${escapeRegExp(option.priceLabel)}<`,
+        `<button[^>]*data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*>[\\s\\S]*?${escapeRegExp(option.label)}\\s+—\\s+${escapeRegExp(option.priceLabel)}[\\s\\S]*?<\\/button>`,
       ),
     );
-
     assert.match(
       join,
       new RegExp(
-        `data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*aria-disabled="true"|aria-disabled="true"[^>]*data-dues-link-placeholder="${escapeRegExp(option.id)}"`,
+        `<button[^>]*data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*disabled`,
       ),
     );
+    assert.equal(
+      join.match(new RegExp(escapeRegExp(option.label), "g"))?.length,
+      1,
+      `${option.label} should appear only in its payment action`,
+    );
+    assert.equal(
+      join.match(new RegExp(escapeRegExp(option.priceLabel), "g"))?.length,
+      1,
+      `${option.priceLabel} should appear only in its payment action`,
+    );
   }
+
+  assert.match(
+    join,
+    /<span class="sr-only">\s*Payment link not yet available\s*<\/span>/,
+  );
+  assert.doesNotMatch(join, /Coming soon/);
 
   for (const channel of expectedJoinSocialLinks) {
     assert.match(

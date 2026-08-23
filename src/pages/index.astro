@@ -46,13 +46,20 @@ const latestPost = posts
       <p
         class="text-muted-foreground mt-7 max-w-2xl text-lg leading-8 text-pretty sm:text-xl"
       >
-        We give UCF students a place to explore financial markets through
-        mathematics, statistics, programming, and research.
+        A student organization dedicated to quantitative finance.
       </p>
 
-      <div class="mt-8 flex flex-wrap gap-3">
-        <LinkButton href="/join/">Join the club</LinkButton>
-        <LinkButton href="/events/" variant="secondary"
+      <div
+        class="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap"
+        data-homepage-primary-actions
+      >
+        <LinkButton href="/join/" class="w-full min-w-0 max-sm:px-3 sm:w-auto"
+          >Join the club</LinkButton
+        >
+        <LinkButton
+          href="/events/"
+          variant="secondary"
+          class="w-full min-w-0 max-sm:px-3 sm:w-auto"
           >Explore events</LinkButton
         >
       </div>
@@ -246,7 +253,7 @@ const latestPost = posts
       <div>
         <SectionHeader
           title="For students"
-          description="Students from any major can attend events, join projects, and get involved with the club."
+          description="Open to UCF students of all majors interested in quantitative finance."
         />
         <div class="mt-6">
           <LinkButton href="/join/">How to join</LinkButton>
@@ -255,7 +262,7 @@ const latestPost = posts
       <div>
         <SectionHeader
           title="For sponsors"
-          description="Support workshops, guest speaker events, competitions, and research initiatives that expand opportunities for UCF students."
+          description="Support the club’s operations and expand opportunities for our members."
         />
         <div class="mt-6">
           <LinkButton href="/sponsors/" variant="secondary">

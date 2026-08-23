@@ -57,10 +57,10 @@ const isJoinActive = isActiveNavigationPath("/join/");
                 <li>
                   <a
                     class:list={[
-                      "hover:text-foreground active:text-foreground relative block py-2 text-sm font-medium transition-colors",
+                      "hover:text-foreground active:text-foreground block py-2 text-sm transition-colors",
                       isActive
-                        ? "text-foreground after:bg-accent after:absolute after:right-0 after:-bottom-[1.18rem] after:left-0 after:h-0.5"
-                        : "text-muted-foreground",
+                        ? "text-foreground font-semibold"
+                        : "text-muted-foreground font-medium",
                     ]}
                     href={item.href}
                     aria-current={isActive ? "page" : undefined}
@@ -121,10 +121,10 @@ const isJoinActive = isActiveNavigationPath("/join/");
                   <li>
                     <a
                       class:list={[
-                        "block touch-manipulation px-3 py-2.5 text-sm font-medium select-none",
+                        "block touch-manipulation px-3 py-2.5 text-sm select-none",
                         isActive
-                          ? "border-accent bg-accent-muted text-foreground border-l-2"
-                          : "text-muted-foreground hover:bg-muted hover:text-foreground active:bg-muted active:text-foreground",
+                          ? "bg-accent-muted text-foreground font-semibold"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground active:bg-muted active:text-foreground font-medium",
                       ]}
                       href={item.href}
                       draggable="false"
