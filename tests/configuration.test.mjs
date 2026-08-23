@@ -138,6 +138,16 @@ test("publishes an llms.txt file that follows the proposal and Lighthouse checks
   if (optionalIndex >= 0) {
     assert.equal(optionalIndex, sectionTitles.length - 1);
   }
+
+  assert.match(
+    llmsText,
+    /- \[About\]\(https:\/\/quantucf\.com\/about\/\): The club's mission and activities\./,
+  );
+  assert.match(
+    llmsText,
+    /- \[Events\]\(https:\/\/quantucf\.com\/events\/\): Workshops, guest speaker events, recruiting events, general meetings, and event details\./,
+  );
+  assert.doesNotMatch(llmsText, /guest speakers|how it works/i);
 });
 
 test("keeps primary button hover colours paired", async () => {
