@@ -21,7 +21,6 @@ export interface DuesOption {
   id: "semester" | "academic-year";
   label: string;
   priceLabel: string;
-  actionLabel: string;
   href: string | null;
   featured?: boolean;
 }
@@ -69,14 +68,12 @@ export const duesOptions: DuesOption[] = [
     id: "semester",
     label: "Fall 2026 Semester Dues",
     priceLabel: "$20",
-    actionLabel: "Pay semester dues",
     href: null,
   },
   {
     id: "academic-year",
     label: "2026–27 Academic Year Dues",
     priceLabel: "$35",
-    actionLabel: "Pay academic year dues",
     href: null,
     featured: true,
   },

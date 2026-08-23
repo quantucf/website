@@ -110,6 +110,13 @@ function metadata(html) {
   };
 }
 
+function plainText(html) {
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function emptyStatePattern(subject) {
   return new RegExp(
     `<p[^>]*data-empty-state[^>]*>\\s*No ${escapeRegExp(subject)} are listed yet\\.\\s*</p>`,
@@ -558,6 +565,34 @@ test("marks the active top-level navigation destination", async () => {
   }
 });
 
+test("publishes one canonical mission across the home and About pages", async () => {
+  const home = await readRoute("/");
+  const about = await readRoute("/about/");
+  const homeMission = home.match(
+    /<h2[^>]*>\s*Our mission\s*<\/h2>\s*<p[^>]*>([\s\S]*?)<\/p>/,
+  )?.[1];
+  const aboutMission = about.match(
+    /<h2[^>]*>\s*Mission\s*<\/h2>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/,
+  )?.[1];
+
+  assert.ok(homeMission, "The home page should publish the club mission");
+  assert.ok(aboutMission, "The About page should publish the club mission");
+  assert.equal(plainText(aboutMission), plainText(homeMission));
+});
+
+test("gives the home hero actions equal width only on small screens", async () => {
+  const home = await readRoute("/");
+  const actionGroup = home.match(
+    /<div[^>]*data-homepage-primary-actions[^>]*>/,
+  )?.[0];
+
+  assert.ok(actionGroup, "The home hero should expose its primary actions");
+  const className = tagAttribute(actionGroup, "class") ?? "";
+  assert.match(className, /\bgrid\b/);
+  assert.match(className, /\bgrid-cols-2\b/);
+  assert.match(className, /\bsm:flex\b/);
+});
+
 test("renders the approved three-step joining flow", async () => {
   const join = await readRoute("/join/");
   const joinMetadata = metadata(join);
@@ -586,21 +621,38 @@ test("renders the approved three-step joining flow", async () => {
     ),
   );
 
+  assert.match(
+    join,
+    /Membership dues help fund club operations and give members access to additional resources and exclusive opportunities\./,
+  );
+  assert.match(join, /data-dues-divider[^>]*>[\s\S]*?\bor\b[\s\S]*?<\/li>/);
+
   for (const option of expectedDuesOptions) {
     assert.match(
       join,
       new RegExp(
-        `data-dues-option="${escapeRegExp(option.id)}"[\\s\\S]*?>${escapeRegExp(option.label)}<[\\s\\S]*?>${escapeRegExp(option.priceLabel)}<`,
+        `data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*>[\\s\\S]*?${escapeRegExp(option.label)}\\s+—\\s+${escapeRegExp(option.priceLabel)}\\s+—\\s+Coming soon[\\s\\S]*?<\\/span>`,
       ),
     );
-
     assert.match(
       join,
       new RegExp(
         `data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*aria-disabled="true"|aria-disabled="true"[^>]*data-dues-link-placeholder="${escapeRegExp(option.id)}"`,
       ),
     );
+    assert.equal(
+      join.match(new RegExp(escapeRegExp(option.label), "g"))?.length,
+      1,
+      `${option.label} should appear only in its payment action`,
+    );
+    assert.equal(
+      join.match(new RegExp(escapeRegExp(option.priceLabel), "g"))?.length,
+      1,
+      `${option.priceLabel} should appear only in its payment action`,
+    );
   }
+
+  assert.doesNotMatch(join, /Payment link coming soon/);
 
   for (const channel of expectedJoinSocialLinks) {
     assert.match(

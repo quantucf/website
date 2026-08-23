@@ -50,9 +50,17 @@ const latestPost = posts
         mathematics, statistics, programming, and research.
       </p>
 
-      <div class="mt-8 flex flex-wrap gap-3">
-        <LinkButton href="/join/">Join the club</LinkButton>
-        <LinkButton href="/events/" variant="secondary"
+      <div
+        class="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap"
+        data-homepage-primary-actions
+      >
+        <LinkButton href="/join/" class="w-full min-w-0 max-sm:px-3 sm:w-auto"
+          >Join the club</LinkButton
+        >
+        <LinkButton
+          href="/events/"
+          variant="secondary"
+          class="w-full min-w-0 max-sm:px-3 sm:w-auto"
           >Explore events</LinkButton
         >
       </div>

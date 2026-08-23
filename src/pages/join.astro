@@ -53,20 +53,26 @@ import LinkButton from "../components/ui/LinkButton.astro";
       >
         <span class="text-muted-foreground text-sm" aria-hidden="true">02</span>
         <h3 class="mt-3 text-lg font-semibold">Pay dues</h3>
-        <ul class="border-border mt-5 divide-y">
+        <p class="text-muted-foreground mt-3 leading-7">
+          Membership dues help fund club operations and give members access to
+          additional resources and exclusive opportunities.
+        </p>
+        <ul class="mt-5">
           {
-            duesOptions.map((option) => (
-              <li
-                class="py-4 first:pt-0 last:pb-0"
-                data-dues-option={option.id}
-              >
-                <div class="flex items-start justify-between gap-4">
-                  <span class="leading-6 font-semibold">{option.label}</span>
-                  <span class="shrink-0 text-lg font-semibold">
-                    {option.priceLabel}
-                  </span>
-                </div>
-                <div class="mt-3">
+            duesOptions.map((option, index) => (
+              <>
+                {index > 0 && (
+                  <li
+                    class="flex items-center gap-3 py-4"
+                    aria-hidden="true"
+                    data-dues-divider
+                  >
+                    <span class="border-border flex-1 border-t" />
+                    <span class="text-muted-foreground text-sm">or</span>
+                    <span class="border-border flex-1 border-t" />
+                  </li>
+                )}
+                <li data-dues-option={option.id}>
                   {option.href ? (
                     <LinkButton
                       href={option.href}
@@ -76,19 +82,24 @@ import LinkButton from "../components/ui/LinkButton.astro";
                       rel="noreferrer"
                       data-dues-link={option.id}
                     >
-                      {option.actionLabel}
+                      Pay {option.label} — {option.priceLabel}
                     </LinkButton>
                   ) : (
                     <span
-                      class="border-border bg-muted text-muted-foreground inline-flex min-h-11 w-full items-center justify-center border px-5 py-2.5 text-center text-sm font-semibold"
+                      class:list={[
+                        "inline-flex min-h-11 w-full items-center justify-center border px-5 py-2.5 text-center text-sm font-semibold opacity-60",
+                        option.featured
+                          ? "bg-accent text-accent-foreground border-accent"
+                          : "bg-background text-foreground border-foreground",
+                      ]}
                       aria-disabled="true"
                       data-dues-link-placeholder={option.id}
                     >
-                      Payment link coming soon
+                      {option.label} — {option.priceLabel} — Coming soon
                     </span>
                   )}
-                </div>
-              </li>
+                </li>
+              </>
             ))
           }
         </ul>
