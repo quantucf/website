@@ -685,7 +685,7 @@ test("links the home activity summary to the detailed About section", async () =
 
   assert.match(
     home,
-    /<h2[^>]*>\s*What we do\s*<\/h2>\s*<p[^>]*>\s*We host events and organize student-led research initiatives and projects for members to explore quantitative finance\.\s*<\/p>[\s\S]*?<a[^>]*href="\/about\/#what-we-do"[^>]*>\s*See what we do →\s*<\/a>/,
+    /<h2[^>]*>\s*What we do\s*<\/h2>\s*<p[^>]*>\s*We host events, organize student-led research initiatives, and collaborate on projects so members can explore quantitative finance\.\s*<\/p>[\s\S]*?<a[^>]*href="\/about\/#what-we-do"[^>]*>\s*See what we do →\s*<\/a>/,
   );
   assert.match(
     about,
