@@ -15,11 +15,11 @@ import LinkButton from "../components/ui/LinkButton.astro";
 
 <BaseLayout
   title="Join | Quantitative Finance Club @ UCF"
-  description="Join Quantitative Finance Club @ UCF. Register on KnightConnect, choose a dues option, and stay connected with the club."
+  description="Join Quantitative Finance Club @ UCF. Membership is open to UCF students of all majors interested in quantitative finance."
 >
   <PageHero
-    title="Join"
-    description="Open to UCF students of all majors who want to explore quantitative finance."
+    title="Join us"
+    description="Open to UCF students of all majors interested in quantitative finance."
   />
 
   <PageSection>
@@ -85,18 +85,22 @@ import LinkButton from "../components/ui/LinkButton.astro";
                       Pay {option.label} — {option.priceLabel}
                     </LinkButton>
                   ) : (
-                    <span
+                    <button
+                      type="button"
                       class:list={[
                         "inline-flex min-h-11 w-full items-center justify-center border px-5 py-2.5 text-center text-sm font-semibold opacity-60",
                         option.featured
                           ? "bg-accent text-accent-foreground border-accent"
                           : "bg-background text-foreground border-foreground",
                       ]}
-                      aria-disabled="true"
                       data-dues-link-placeholder={option.id}
+                      disabled
                     >
-                      {option.label} — {option.priceLabel} — Coming soon
-                    </span>
+                      {option.label} — {option.priceLabel}
+                      <span class="sr-only">
+                        Payment link not yet available
+                      </span>
+                    </button>
                   )}
                 </li>
               </>

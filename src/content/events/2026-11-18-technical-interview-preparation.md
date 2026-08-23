@@ -1,7 +1,7 @@
 ---
 title: Technical Interview Preparation
 description: Prepare for technical interviews across quantitative research, trading, and development roles.
-eventType: recruiting
+eventType: workshop
 startDate: "2026-11-18"
 location: TBD
 ---

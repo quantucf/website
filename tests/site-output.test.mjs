@@ -287,6 +287,92 @@ test("renders published meeting times and locations as TBD", async () => {
   }
 });
 
+test("uses the code XML icon for workshop events", async () => {
+  const workshop = await readRoute(
+    "/events/2026-09-16-python-for-quantitative-finance/",
+  );
+
+  assert.match(
+    workshop,
+    /data-event-type-icon="workshop"[^>]*class="[^"]*lucide-code-xml/,
+  );
+});
+
+test("classifies technical interview preparation as a workshop", async () => {
+  const interviewPreparation = await readRoute(
+    "/events/2026-11-18-technical-interview-preparation/",
+  );
+
+  assert.match(
+    interviewPreparation,
+    /data-event-type-icon="workshop"[^>]*class="[^"]*lucide-code-xml/,
+  );
+  assert.doesNotMatch(
+    interviewPreparation,
+    /data-event-type-icon="recruiting"/,
+  );
+});
+
+test("renders the approved page descriptions in heroes and metadata", async () => {
+  const pages = [
+    {
+      route: "/",
+      visible: "A student organization dedicated to quantitative finance.",
+      metadata:
+        "Quantitative Finance Club @ UCF is a student organization dedicated to quantitative finance.",
+    },
+    {
+      route: "/about/",
+      visible: "A student organization dedicated to quantitative finance.",
+      metadata:
+        "Learn about Quantitative Finance Club @ UCF, a student organization dedicated to quantitative finance.",
+    },
+    {
+      route: "/projects/",
+      visible: "Student-led research and projects in quantitative finance.",
+      metadata:
+        "Explore student-led research and projects in quantitative finance from Quantitative Finance Club @ UCF.",
+    },
+    {
+      route: "/officers/",
+      visible:
+        "Meet the students leading the club’s programs, projects, and operations.",
+      metadata:
+        "Meet the students leading Quantitative Finance Club @ UCF’s programs, projects, and operations.",
+    },
+    {
+      route: "/sponsors/",
+      visible:
+        "Support the club’s operations and expand opportunities for our members.",
+      metadata:
+        "Support Quantitative Finance Club @ UCF’s operations and expand opportunities for student members.",
+    },
+    {
+      route: "/posts/",
+      visible: "Announcements, resources, and updates from the club.",
+      metadata:
+        "Read announcements, resources, and updates from Quantitative Finance Club @ UCF.",
+    },
+  ];
+
+  for (const page of pages) {
+    const html = await readRoute(page.route);
+    assert.ok(
+      html.includes(page.visible),
+      `${page.route} needs the approved visible description`,
+    );
+    assert.equal(metadata(html).description, page.metadata);
+  }
+
+  const webmanifest = JSON.parse(
+    await readFile(staticOutputPath("site.webmanifest"), "utf8"),
+  );
+  assert.equal(
+    webmanifest.description,
+    "Quantitative Finance Club @ UCF is a student organization dedicated to quantitative finance.",
+  );
+});
+
 test("resolves every internal link, fragment, and generated asset", async () => {
   for (const filePath of await builtHtmlFiles()) {
     const route = routeFromOutputPath(filePath);
@@ -599,9 +685,13 @@ test("renders the approved three-step joining flow", async () => {
 
   assert.equal(
     joinMetadata.description,
-    "Join Quantitative Finance Club @ UCF. Register on KnightConnect, choose a dues option, and stay connected with the club.",
+    "Join Quantitative Finance Club @ UCF. Membership is open to UCF students of all majors interested in quantitative finance.",
   );
-  assert.match(join, /<h1[^>]*>\s*Join\s*<\/h1>/);
+  assert.match(join, /<h1[^>]*>\s*Join us\s*<\/h1>/);
+  assert.match(
+    join,
+    /<h1[^>]*>\s*Join us\s*<\/h1>[\s\S]*?<p[^>]*>\s*Open to UCF students of all majors interested in quantitative finance\.\s*<\/p>/,
+  );
   assert.match(join, /<h2[^>]*>\s*How to join\s*<\/h2>/);
   assert.deepEqual(
     [...join.matchAll(/data-join-step="(\d{2})"/g)].map((match) => match[1]),
@@ -631,13 +721,13 @@ test("renders the approved three-step joining flow", async () => {
     assert.match(
       join,
       new RegExp(
-        `data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*>[\\s\\S]*?${escapeRegExp(option.label)}\\s+—\\s+${escapeRegExp(option.priceLabel)}\\s+—\\s+Coming soon[\\s\\S]*?<\\/span>`,
+        `<button[^>]*data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*>[\\s\\S]*?${escapeRegExp(option.label)}\\s+—\\s+${escapeRegExp(option.priceLabel)}[\\s\\S]*?<\\/button>`,
       ),
     );
     assert.match(
       join,
       new RegExp(
-        `data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*aria-disabled="true"|aria-disabled="true"[^>]*data-dues-link-placeholder="${escapeRegExp(option.id)}"`,
+        `<button[^>]*data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*disabled`,
       ),
     );
     assert.equal(
@@ -652,7 +742,11 @@ test("renders the approved three-step joining flow", async () => {
     );
   }
 
-  assert.doesNotMatch(join, /Payment link coming soon/);
+  assert.match(
+    join,
+    /<span class="sr-only">\s*Payment link not yet available\s*<\/span>/,
+  );
+  assert.doesNotMatch(join, /Coming soon/);
 
   for (const channel of expectedJoinSocialLinks) {
     assert.match(

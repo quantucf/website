@@ -1,6 +1,6 @@
 # Quantitative Finance Club @ UCF
 
-> Quantitative Finance Club @ UCF is a University of Central Florida student organization where students explore financial markets through mathematics, statistics, programming, and research.
+> Quantitative Finance Club @ UCF is a student organization dedicated to quantitative finance.
 
 The club hosts workshops, research projects, guest speaker events, and career events for students interested in quantitative finance.
 
@@ -18,19 +18,19 @@ Topics covered:
 ## Club
 
 - [Home](https://quantucf.com/): Overview of the club, upcoming events, recent posts, and current projects.
-- [About](https://quantucf.com/about/): The club's purpose, activities, and how it works.
+- [About](https://quantucf.com/about/): The club's mission, activities, and how it works.
 - [Join](https://quantucf.com/join/): Membership registration, dues options, and official community channels.
 
 ## Activities
 
 - [Events](https://quantucf.com/events/): Upcoming workshops, talks, meetings, and event details.
-- [Projects](https://quantucf.com/projects/): Student quantitative finance research projects, including their objectives, methods, and status.
+- [Projects](https://quantucf.com/projects/): Student-led research and projects in quantitative finance, including their objectives, methods, and status.
 
 ## Publications
 
-- [Posts](https://quantucf.com/posts/): Club news, announcements, and educational resources.
+- [Posts](https://quantucf.com/posts/): Announcements, resources, and updates from the club.
 
 ## Optional
 
 - [Officers](https://quantucf.com/officers/): Current student leadership.
-- [Sponsors](https://quantucf.com/sponsors/): Sponsorship opportunities and information for organizations interested in supporting the club.
+- [Sponsors](https://quantucf.com/sponsors/): Opportunities to support the club's operations and expand opportunities for members.
