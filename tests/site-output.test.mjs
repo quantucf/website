@@ -270,9 +270,21 @@ test("uses consistent empty states across collection pages", async () => {
   }
 });
 
-test("renders published meeting times and locations as TBD", async () => {
+test("renders confirmed meeting details and keeps unconfirmed details TBD", async () => {
   for (const event of await collectionEntries("events")) {
     const html = await readRoute(`/events/${event.id}/`);
+
+    if (event.fileName === "2026-09-09-club-introduction.md") {
+      assert.match(
+        html,
+        /data-metadata-icon="clock"[^>]*>[\s\S]*?7:00 PM[\s\S]*?<\/span>/,
+      );
+      assert.match(
+        html,
+        /data-metadata-icon="location"[^>]*>[\s\S]*?Student Union, Live Oak Ballroom, Room A[\s\S]*?<\/span>/,
+      );
+      continue;
+    }
 
     assert.match(
       html,

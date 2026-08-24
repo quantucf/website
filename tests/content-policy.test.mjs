@@ -170,7 +170,7 @@ test("does not publish placeholder external resources", async () => {
   }
 });
 
-test("keeps published event times and locations TBD", async () => {
+test("publishes only confirmed event times and locations", async () => {
   for (const event of await collectionEntries("events")) {
     const startDate = frontmatterValue(event.source, "startDate")?.replaceAll(
       '"',
@@ -180,6 +180,15 @@ test("keeps published event times and locations TBD", async () => {
       '"',
       "",
     );
+
+    if (event.fileName === "2026-09-09-club-introduction.md") {
+      assert.equal(startDate, "2026-09-09T19:00:00-04:00");
+      assert.equal(
+        frontmatterValue(event.source, "location"),
+        "Student Union, Live Oak Ballroom, Room A",
+      );
+      continue;
+    }
 
     assert.match(
       startDate ?? "",
