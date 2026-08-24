@@ -2,7 +2,7 @@
 title: Introduction to the Quantitative Finance Club
 description: Welcome prospective and new members, introduce the club, and outline what members can expect throughout the semester.
 eventType: info-session
-startDate: "2026-09-02"
+startDate: "2026-09-09"
 location: TBD
 ---
 

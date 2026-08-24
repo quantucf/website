@@ -2,7 +2,7 @@
 title: Returns, Risk, and Volatility Workshop
 description: Move from raw price data to the measures used in empirical financial analysis.
 eventType: workshop
-startDate: "2026-10-14"
+startDate: "2026-10-21"
 location: TBD
 ---
 

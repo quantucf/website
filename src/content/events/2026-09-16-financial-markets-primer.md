@@ -2,7 +2,7 @@
 title: Financial Markets Primer
 description: An introduction to the instruments, institutions, and participants that shape financial markets.
 eventType: meeting
-startDate: "2026-09-09"
+startDate: "2026-09-16"
 location: TBD
 ---
 

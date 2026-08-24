@@ -2,7 +2,7 @@
 title: Probability for Quantitative Finance Workshop
 description: An introduction to the probability concepts used in risk, pricing, simulation, and portfolio analysis.
 eventType: workshop
-startDate: "2026-10-07"
+startDate: "2026-10-14"
 location: TBD
 ---
 
