@@ -68,13 +68,13 @@ export const duesOptions: DuesOption[] = [
     id: "semester",
     label: "Fall 2026 Semester",
     priceLabel: "$20",
-    href: null,
+    href: "https://buy.stripe.com/cNi6oI9dId7Q6rd1gQeZ201",
   },
   {
     id: "academic-year",
     label: "2026–27 Academic Year",
     priceLabel: "$35",
-    href: null,
+    href: "https://buy.stripe.com/eVq4gA0Hc6Js3f1gbKeZ200",
     featured: true,
   },
 ];
