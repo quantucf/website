@@ -37,11 +37,13 @@ const expectedDuesOptions = [
     id: "semester",
     label: "Fall 2026 Semester",
     priceLabel: "$20",
+    href: "https://buy.stripe.com/cNi6oI9dId7Q6rd1gQeZ201",
   },
   {
     id: "academic-year",
     label: "2026–27 Academic Year",
     priceLabel: "$35",
+    href: "https://buy.stripe.com/eVq4gA0Hc6Js3f1gbKeZ200",
   },
 ];
 const expectedJoinSocialLinks = [
@@ -783,13 +785,13 @@ test("renders the approved three-step joining flow", async () => {
     assert.match(
       join,
       new RegExp(
-        `<button[^>]*data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*>[\\s\\S]*?${escapeRegExp(option.label)}\\s+—\\s+${escapeRegExp(option.priceLabel)}[\\s\\S]*?<\\/button>`,
+        `data-dues-link="${escapeRegExp(option.id)}"[^>]*href="${escapeRegExp(option.href)}"|href="${escapeRegExp(option.href)}"[^>]*data-dues-link="${escapeRegExp(option.id)}"`,
       ),
     );
     assert.match(
       join,
       new RegExp(
-        `<button[^>]*data-dues-link-placeholder="${escapeRegExp(option.id)}"[^>]*disabled`,
+        `<a[^>]*data-dues-link="${escapeRegExp(option.id)}"[^>]*>[\\s\\S]*?${escapeRegExp(option.label)}\\s+—\\s+${escapeRegExp(option.priceLabel)}[\\s\\S]*?<\\/a>`,
       ),
     );
     assert.equal(
@@ -804,10 +806,8 @@ test("renders the approved three-step joining flow", async () => {
     );
   }
 
-  assert.match(
-    join,
-    /<span class="sr-only">\s*Payment link not yet available\s*<\/span>/,
-  );
+  assert.doesNotMatch(join, /data-dues-link-placeholder/);
+  assert.doesNotMatch(join, /Payment link not yet available/);
   assert.doesNotMatch(join, /Coming soon/);
 
   for (const channel of expectedJoinSocialLinks) {
