@@ -2,7 +2,7 @@
 title: Machine Learning for Finance Workshop
 description: Examine how machine learning can be used in financial research, with an emphasis on validation, baselines, and noisy data.
 eventType: workshop
-startDate: "2027-03-31"
+startDate: "2027-04-06"
 location: TBD
 ---
 
