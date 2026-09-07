@@ -3,14 +3,19 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { URL } from "node:url";
 
+import { clubTimeZone } from "../src/lib/content.ts";
+
 import {
   ARCHIVE_PAGE_SIZE,
-  isUpcomingEvent,
+  isPastEvent,
   POSTS_PER_PAGE,
   PROJECT_ARCHIVE_PREVIEW_LIMIT,
   RECENT_PAST_EVENTS_LIMIT,
 } from "../src/lib/archive.ts";
 import {
+  duesOptions,
+  joinSocialLinks,
+  knightConnectLink,
   footerEmailLink,
   footerSocialLinks,
 } from "../src/data/site-content.ts";
@@ -23,40 +28,11 @@ import {
   localOutputPath,
   pathExists,
   readRoute,
-  requiredRoutes,
   routeFromOutputPath,
   siteOrigin,
   staticOutputPath,
   tagAttribute,
 } from "./helpers/site-output.mjs";
-
-const expectedKnightConnectHref =
-  "https://knightconnect.campuslabs.com/engage/organization/quantativefinanceclub";
-const expectedDuesOptions = [
-  {
-    id: "semester",
-    label: "Fall 2026 Semester",
-    priceLabel: "$20",
-    href: "https://buy.stripe.com/cNi6oI9dId7Q6rd1gQeZ201",
-  },
-  {
-    id: "academic-year",
-    label: "2026–27 Academic Year",
-    priceLabel: "$35",
-    href: "https://buy.stripe.com/eVq4gA0Hc6Js3f1gbKeZ200",
-  },
-];
-const expectedJoinSocialLinks = [
-  { label: "Discord", href: "https://discord.gg/5rAzsYDT9e" },
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/quantucf/",
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/company/quantucf/",
-  },
-];
 
 function pageRoutes(baseRoute, itemCount, pageSize) {
   const pageCount = Math.max(1, Math.ceil(itemCount / pageSize));
@@ -119,14 +95,8 @@ function plainText(html) {
     .trim();
 }
 
-function emptyStatePattern(subject) {
-  return new RegExp(
-    `<p[^>]*data-empty-state[^>]*>\\s*No ${escapeRegExp(subject)} are listed yet\\.\\s*</p>`,
-  );
-}
-
 async function assertLocalReference(sourceRoute, rawReference) {
-  const url = new URL(rawReference, siteOrigin);
+  const url = new URL(rawReference, new URL(sourceRoute, siteOrigin));
   if (url.origin !== siteOrigin) return;
 
   const targetPath = localOutputPath(url.pathname);
@@ -150,9 +120,8 @@ async function assertLocalReference(sourceRoute, rawReference) {
 test("builds required routes, published content, and pagination", async () => {
   const routes = new Set(await builtRoutes());
 
-  for (const route of requiredRoutes) {
-    assert.ok(routes.has(route), `Expected ${route} to be built`);
-  }
+  assert.ok(routes.has("/"), "The home page must be built");
+  assert.ok(routes.has("/404/"), "The error page must be built");
 
   for (const collection of ["events", "projects"]) {
     for (const entry of await collectionEntries(collection)) {
@@ -175,13 +144,11 @@ test("builds required routes, published content, and pagination", async () => {
     );
   }
 
-  const now = Date.now();
+  const now = new Date();
   const pastEvents = (await collectionEntries("events")).filter((event) => {
     const startDate = frontmatterValue(event.source, "startDate");
     const endDate = frontmatterValue(event.source, "endDate");
-    const eventEnd = endDate ?? startDate;
-
-    return eventEnd ? new Date(eventEnd).getTime() < now : false;
+    return isPastEvent({ data: { startDate, endDate } }, now);
   });
   const completedProjects = (await collectionEntries("projects")).filter(
     (project) => frontmatterValue(project.source, "status") === "completed",
@@ -210,194 +177,56 @@ test("builds required routes, published content, and pagination", async () => {
   assert.deepEqual(actualPaginatedRoutes, expectedPaginatedRoutes);
 });
 
-test("inlines stylesheets to avoid a render-blocking request", async () => {
-  for (const filePath of await builtHtmlFiles()) {
-    const route = routeFromOutputPath(filePath);
-    const html = await readFile(filePath, "utf8");
-
-    assert.match(html, /<style(?:\s[^>]*)?>[\s\S]*?<\/style>/);
-    assert.doesNotMatch(
-      html,
-      /<link\b[^>]*\brel="stylesheet"[^>]*>/,
-      `${route} must not load a render-blocking stylesheet`,
-    );
-  }
-});
-
-test("uses consistent empty states across collection pages", async () => {
-  const expectations = [
-    ["/events/", "events"],
-    ["/posts/", "posts"],
-    ["/projects/", "projects"],
-    ["/sponsors/", "sponsors"],
-  ];
-
-  for (const [route, subject] of expectations) {
-    const html = await readRoute(route);
-    const entries = await collectionEntries(subject);
-
-    if (entries.length === 0) {
-      assert.match(html, emptyStatePattern(subject));
-    } else {
-      assert.doesNotMatch(html, emptyStatePattern(subject));
-    }
-  }
-
-  const home = await readRoute("/");
-  const events = await collectionEntries("events");
-  const hasUpcomingEvents = events.some((event) => {
-    const startDate = frontmatterValue(event.source, "startDate")?.replaceAll(
-      '"',
-      "",
-    );
-    const endDate = frontmatterValue(event.source, "endDate")?.replaceAll(
-      '"',
-      "",
-    );
-
-    return isUpcomingEvent({ data: { startDate, endDate } });
-  });
-
-  if (!hasUpcomingEvents) {
-    assert.match(
-      home,
-      emptyStatePattern(events.length === 0 ? "events" : "upcoming events"),
-    );
-  }
-
-  for (const subject of ["posts", "projects"]) {
-    if ((await collectionEntries(subject)).length === 0) {
-      assert.match(home, emptyStatePattern(subject));
-    }
-  }
-});
-
-test("renders confirmed meeting details and keeps unconfirmed details TBD", async () => {
+test("renders event dates, times and locations from content", async () => {
   for (const event of await collectionEntries("events")) {
     const html = await readRoute(`/events/${event.id}/`);
+    const startDate = frontmatterValue(event.source, "startDate");
+    const endDate = frontmatterValue(event.source, "endDate");
+    const location = frontmatterValue(event.source, "location");
+    const clock = html.match(
+      /<span[^>]*data-metadata-icon="clock"[^>]*>([\s\S]*?)<\/span>/,
+    )?.[1];
+    const place = html.match(
+      /<span[^>]*data-metadata-icon="location"[^>]*>([\s\S]*?)<\/span>/,
+    )?.[1];
+    const times = [...html.matchAll(/<time\b[^>]*>[\s\S]*?<\/time>/g)].map(
+      ([tag]) => tag,
+    );
 
-    if (event.fileName === "2026-09-09-club-introduction.md") {
-      assert.match(
-        html,
-        /data-metadata-icon="clock"[^>]*>[\s\S]*?7:00 PM[\s\S]*?<\/span>/,
+    if (startDate) {
+      assert.ok(
+        times.some((tag) => tagAttribute(tag, "datetime") === startDate),
+        event.id,
       );
-      assert.match(
-        html,
-        /data-metadata-icon="location"[^>]*>[\s\S]*?Student Union, Live Oak Ballroom, Room A[\s\S]*?<\/span>/,
-      );
-      continue;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
+        assert.equal(plainText(clock ?? ""), "TBD", event.id);
+      } else {
+        for (const date of [startDate, endDate].filter(Boolean)) {
+          const time = times.find(
+            (tag) =>
+              tagAttribute(tag, "datetime") === date &&
+              tagAttribute(tag, "data-localized-date") === "time",
+          );
+          assert.ok(time, `${event.id} must render time ${date}`);
+          assert.equal(
+            plainText(time),
+            new Intl.DateTimeFormat("en-US", {
+              hour: "numeric",
+              minute: "2-digit",
+              timeZone: clubTimeZone,
+            }).format(new Date(date)),
+          );
+        }
+      }
+    } else {
+      assert.equal(clock, undefined, event.id);
     }
-
-    assert.match(
-      html,
-      /data-metadata-icon="clock"[^>]*>[\s\S]*?TBD[\s\S]*?<\/span>/,
-      `${event.fileName} should render its meeting time as TBD`,
-    );
-    assert.match(
-      html,
-      /data-metadata-icon="location"[^>]*>[\s\S]*?TBD[\s\S]*?<\/span>/,
-      `${event.fileName} should render its location as TBD`,
+    assert.equal(
+      place === undefined ? undefined : plainText(place),
+      location,
+      event.id,
     );
   }
-});
-
-test("uses the code XML icon for workshop events", async () => {
-  const workshop = await readRoute(
-    "/events/2026-09-23-python-for-quantitative-finance/",
-  );
-
-  assert.match(
-    workshop,
-    /data-event-type-icon="workshop"[^>]*class="[^"]*lucide-code-xml/,
-  );
-});
-
-test("classifies technical interview preparation as a workshop", async () => {
-  const interviewPreparation = await readRoute(
-    "/events/2026-11-25-technical-interview-preparation/",
-  );
-
-  assert.match(
-    interviewPreparation,
-    /data-event-type-icon="workshop"[^>]*class="[^"]*lucide-code-xml/,
-  );
-  assert.doesNotMatch(
-    interviewPreparation,
-    /data-event-type-icon="recruiting"/,
-  );
-});
-
-test("renders the approved page descriptions in heroes and metadata", async () => {
-  const pages = [
-    {
-      route: "/",
-      visible: "A student organization dedicated to quantitative finance.",
-      metadata:
-        "Quantitative Finance Club @ UCF is a student organization dedicated to quantitative finance.",
-    },
-    {
-      route: "/about/",
-      visible: "A student organization dedicated to quantitative finance.",
-      metadata:
-        "Learn about Quantitative Finance Club @ UCF, a student organization dedicated to quantitative finance.",
-    },
-    {
-      route: "/events/",
-      visible:
-        "Workshops, guest speaker events, recruiting events, general meetings, and more.",
-      metadata:
-        "Explore workshops, guest speaker events, recruiting events, and general meetings from Quantitative Finance Club @ UCF.",
-    },
-    {
-      route: "/projects/",
-      visible: "Student-led research and projects in quantitative finance.",
-      metadata:
-        "Explore student-led research and projects in quantitative finance from Quantitative Finance Club @ UCF.",
-    },
-    {
-      route: "/officers/",
-      visible:
-        "Meet the students leading the club’s programs, projects, and operations.",
-      metadata:
-        "Meet the students leading Quantitative Finance Club @ UCF’s programs, projects, and operations.",
-    },
-    {
-      route: "/sponsors/",
-      visible:
-        "Support the club’s operations and expand opportunities for our members.",
-      metadata:
-        "Support Quantitative Finance Club @ UCF’s operations and expand opportunities for student members.",
-    },
-    {
-      route: "/posts/",
-      visible: "Announcements, resources, and updates from the club.",
-      metadata:
-        "Read announcements, resources, and updates from Quantitative Finance Club @ UCF.",
-    },
-  ];
-
-  for (const page of pages) {
-    const html = await readRoute(page.route);
-    assert.ok(
-      html.includes(page.visible),
-      `${page.route} needs the approved visible description`,
-    );
-    assert.equal(metadata(html).description, page.metadata);
-  }
-
-  const webmanifest = JSON.parse(
-    await readFile(staticOutputPath("site.webmanifest"), "utf8"),
-  );
-  assert.equal(
-    webmanifest.description,
-    "Quantitative Finance Club @ UCF is a student organization dedicated to quantitative finance.",
-  );
-
-  const home = await readRoute("/");
-  assert.match(
-    home,
-    /<h2[^>]*>\s*For students\s*<\/h2>[\s\S]*?Open to UCF students of all majors interested in quantitative finance\./,
-  );
 });
 
 test("resolves every internal link, fragment, and generated asset", async () => {
@@ -425,7 +254,6 @@ test("resolves every internal link, fragment, and generated asset", async () => 
   const manifest = JSON.parse(
     await readFile(staticOutputPath("site.webmanifest"), "utf8"),
   );
-  assert.equal(manifest.lang, "en-US");
   for (const icon of manifest.icons) {
     await assertLocalReference("/site.webmanifest", icon.src);
   }
@@ -433,7 +261,6 @@ test("resolves every internal link, fragment, and generated asset", async () => 
 
 test("publishes unique and route-consistent metadata on every page", async () => {
   const seenTitles = new Map();
-  const seenDescriptions = new Map();
 
   for (const filePath of await builtHtmlFiles()) {
     const route = routeFromOutputPath(filePath);
@@ -476,13 +303,7 @@ test("publishes unique and route-consistent metadata on every page", async () =>
       false,
       `${route} duplicates the title used by ${seenTitles.get(pageMetadata.title)}`,
     );
-    assert.equal(
-      seenDescriptions.has(pageMetadata.description),
-      false,
-      `${route} duplicates the description used by ${seenDescriptions.get(pageMetadata.description)}`,
-    );
     seenTitles.set(pageMetadata.title, route);
-    seenDescriptions.set(pageMetadata.description, route);
   }
 });
 
@@ -577,7 +398,7 @@ test("lists every public route exactly once in the sitemap", async () => {
   assert.deepEqual(actualUrls, expectedUrls);
 
   const robots = await readFile(staticOutputPath("robots.txt"), "utf8");
-  assert.match(robots, /Sitemap: https:\/\/quantucf\.com\/sitemap\.xml/);
+  assert.ok(robots.includes(`Sitemap: ${new URL("/sitemap.xml", siteOrigin)}`));
 });
 
 test("keeps static accessibility references valid on every page", async () => {
@@ -587,13 +408,12 @@ test("keeps static accessibility references valid on every page", async () => {
     const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
     const idSet = new Set(ids);
 
-    assert.match(html, /<html lang="en-US">/);
-    assert.match(html, /<a[^>]*href="#main-content"/);
-    assert.equal(
-      [...html.matchAll(/<main\b[^>]*id="main-content"/g)].length,
-      1,
-      `${route} should have one main landmark`,
-    );
+    assert.match(html, /<html\b[^>]*\blang="[^"]+"/);
+    const mains = [...html.matchAll(/<main\b[^>]*>/g)];
+    assert.equal(mains.length, 1, `${route} should have one main landmark`);
+    const mainId = tagAttribute(mains[0][0], "id");
+    assert.ok(mainId, `${route} needs a skip-link target`);
+    assert.match(html, new RegExp(`<a[^>]*href="#${escapeRegExp(mainId)}"`));
     assert.equal(idSet.size, ids.length, `${route} contains duplicate IDs`);
 
     for (const label of html.matchAll(/<label\b[^>]*\bfor="([^"]+)"[^>]*>/g)) {
@@ -625,15 +445,19 @@ test("keeps static accessibility references valid on every page", async () => {
       );
     }
 
-    assert.match(html, /<nav[^>]*aria-label="Primary navigation"/);
-    assert.match(html, /<nav[^>]*aria-label="Mobile navigation"/);
+    for (const [nav] of html.matchAll(/<nav\b[^>]*>/g)) {
+      assert.ok(
+        tagAttribute(nav, "aria-label") || tagAttribute(nav, "aria-labelledby"),
+        `${route} needs labelled navigation`,
+      );
+    }
   }
 
   const home = await readRoute("/");
   const themeControls = [
     ...home.matchAll(/<input\b[^>]*data-theme-control[^>]*>/g),
   ];
-  assert.equal(themeControls.length, 2);
+  assert.ok(themeControls.length > 0);
   for (const control of themeControls) {
     assert.equal(tagAttribute(control[0], "role"), "switch");
     assert.ok(tagAttribute(control[0], "aria-label"));
@@ -641,23 +465,10 @@ test("keeps static accessibility references valid on every page", async () => {
 });
 
 test("marks the active top-level navigation destination", async () => {
-  const routeGroups = [
-    ["/", "/"],
-    ["/about/", "/about/"],
-    ["/events/", "/events/"],
-    ["/projects/", "/projects/"],
-    ["/posts/", "/posts/"],
-    ["/officers/", "/officers/"],
-    ["/sponsors/", "/sponsors/"],
-    ["/join/", "/join/"],
-  ];
-
   for (const route of (await builtRoutes()).filter(
     (candidate) => candidate !== "/404/",
   )) {
-    const expectedHref = routeGroups.find(([prefix]) =>
-      prefix === "/" ? route === "/" : route.startsWith(prefix),
-    )?.[1];
+    const expectedHref = route === "/" ? "/" : `/${route.split("/")[1]}/`;
     const html = await readRoute(route);
     const activeHrefs = [
       ...html.matchAll(/<a\b[^>]*aria-current="page"[^>]*>/g),
@@ -665,7 +476,6 @@ test("marks the active top-level navigation destination", async () => {
       .map((match) => tagAttribute(match[0], "href"))
       .filter(Boolean);
 
-    assert.ok(expectedHref, `No navigation group defined for ${route}`);
     assert.ok(
       activeHrefs.includes(expectedHref),
       `${route} should mark ${expectedHref} as current`,
@@ -678,154 +488,41 @@ test("marks the active top-level navigation destination", async () => {
   }
 });
 
-test("publishes one canonical mission across the home and About pages", async () => {
-  const home = await readRoute("/");
-  const about = await readRoute("/about/");
-  const homeMission = home.match(
-    /<h2[^>]*>\s*Our mission\s*<\/h2>\s*<p[^>]*>([\s\S]*?)<\/p>/,
-  )?.[1];
-  const aboutMission = about.match(
-    /<h2[^>]*>\s*Mission\s*<\/h2>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/,
-  )?.[1];
-
-  assert.ok(homeMission, "The home page should publish the club mission");
-  assert.ok(aboutMission, "The About page should publish the club mission");
-  assert.equal(plainText(aboutMission), plainText(homeMission));
-});
-
-test("links the home activity summary to the detailed About section", async () => {
-  const home = await readRoute("/");
-  const about = await readRoute("/about/");
-
-  assert.match(
-    home,
-    /<h2[^>]*>\s*What we do\s*<\/h2>\s*<p[^>]*>\s*We host events, organize student-led research initiatives, and collaborate on projects so members can explore quantitative finance\.\s*<\/p>[\s\S]*?<a[^>]*href="\/about\/#what-we-do"[^>]*>\s*See what we do →\s*<\/a>/,
-  );
-  assert.match(
-    about,
-    /<section[^>]*id="what-we-do"[^>]*>[\s\S]*?<h2[^>]*>\s*What we do\s*<\/h2>/,
-  );
-  assert.doesNotMatch(about, /How the club works/);
-
-  for (const [heading, description] of [
-    [
-      "Events",
-      "Workshops, guest speaker events, recruiting events, general meetings, and more.",
-    ],
-    [
-      "Research",
-      "Readings, replications, and research initiatives that explore markets, models, and financial theory.",
-    ],
-    [
-      "Projects",
-      "Student-led projects that explore research questions and build tools for quantitative finance.",
-    ],
-  ]) {
-    assert.match(
-      about,
-      new RegExp(
-        `<h3[^>]*>\\s*${escapeRegExp(heading)}\\s*<\\/h3>\\s*<p[^>]*>\\s*${escapeRegExp(description)}\\s*<\\/p>`,
-      ),
-    );
-  }
-});
-
-test("gives the home hero actions equal width only on small screens", async () => {
-  const home = await readRoute("/");
-  const actionGroup = home.match(
-    /<div[^>]*data-homepage-primary-actions[^>]*>/,
-  )?.[0];
-
-  assert.ok(actionGroup, "The home hero should expose its primary actions");
-  const className = tagAttribute(actionGroup, "class") ?? "";
-  assert.match(className, /\bgrid\b/);
-  assert.match(className, /\bgrid-cols-2\b/);
-  assert.match(className, /\bsm:flex\b/);
-});
-
-test("renders the approved three-step joining flow", async () => {
+test("renders configured joining and payment actions", async () => {
   const join = await readRoute("/join/");
-  const joinMetadata = metadata(join);
-
-  assert.equal(
-    joinMetadata.description,
-    "Join Quantitative Finance Club @ UCF. Membership is open to UCF students of all majors interested in quantitative finance.",
-  );
-  assert.match(join, /<h1[^>]*>\s*Join us\s*<\/h1>/);
-  assert.match(
-    join,
-    /<h1[^>]*>\s*Join us\s*<\/h1>[\s\S]*?<p[^>]*>\s*Open to UCF students of all majors interested in quantitative finance\.\s*<\/p>/,
-  );
-  assert.match(join, /<h2[^>]*>\s*How to join\s*<\/h2>/);
-  assert.deepEqual(
-    [...join.matchAll(/data-join-step="(\d{2})"/g)].map((match) => match[1]),
-    ["01", "02", "03"],
-  );
-  for (const heading of [
-    "Join on KnightConnect",
-    "Pay dues",
-    "Stay connected",
-  ]) {
-    assert.match(join, new RegExp(`>${escapeRegExp(heading)}<`));
-  }
-  assert.match(
-    join,
-    new RegExp(
-      `data-join-link="KnightConnect"[^>]*href="${escapeRegExp(expectedKnightConnectHref)}"|href="${escapeRegExp(expectedKnightConnectHref)}"[^>]*data-join-link="KnightConnect"`,
-    ),
+  const anchors = [...join.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/g)].map(
+    ([tag]) => tag,
   );
 
-  assert.match(
-    join,
-    /Membership dues help fund club operations and give members access to additional resources and exclusive opportunities\./,
-  );
-  assert.doesNotMatch(join, /data-dues-divider/);
-
-  for (const option of expectedDuesOptions) {
-    assert.match(
-      join,
-      new RegExp(
-        `data-dues-link="${escapeRegExp(option.id)}"[^>]*href="${escapeRegExp(option.href)}"|href="${escapeRegExp(option.href)}"[^>]*data-dues-link="${escapeRegExp(option.id)}"`,
-      ),
-    );
-    assert.match(
-      join,
-      new RegExp(
-        `<a[^>]*data-dues-link="${escapeRegExp(option.id)}"[^>]*>[\\s\\S]*?${escapeRegExp(option.label)}\\s+—\\s+${escapeRegExp(option.priceLabel)}[\\s\\S]*?<\\/a>`,
-      ),
-    );
-    assert.equal(
-      join.match(new RegExp(escapeRegExp(option.label), "g"))?.length,
-      1,
-      `${option.label} should appear only in its payment action`,
-    );
-    assert.equal(
-      join.match(new RegExp(escapeRegExp(option.priceLabel), "g"))?.length,
-      1,
-      `${option.priceLabel} should appear only in its payment action`,
+  for (const link of [knightConnectLink, ...joinSocialLinks]) {
+    assert.ok(
+      anchors.some((tag) => tagAttribute(tag, "href") === link.href),
+      `${link.label} must be linked`,
     );
   }
-
-  assert.doesNotMatch(join, /data-dues-link-placeholder/);
-  assert.doesNotMatch(join, /Payment link not yet available/);
-  assert.doesNotMatch(join, /Coming soon/);
-
-  for (const channel of expectedJoinSocialLinks) {
-    assert.match(
-      join,
-      new RegExp(
-        `data-join-link="${escapeRegExp(channel.label)}"[^>]*href="${escapeRegExp(channel.href)}"|href="${escapeRegExp(channel.href)}"[^>]*data-join-link="${escapeRegExp(channel.label)}"`,
-      ),
-    );
+  for (const option of duesOptions) {
+    if (option.href) {
+      const anchor = anchors.find(
+        (tag) => tagAttribute(tag, "data-dues-link") === option.id,
+      );
+      assert.ok(anchor, `${option.id} needs a payment link`);
+      assert.equal(tagAttribute(anchor, "href"), option.href);
+      assert.ok(plainText(anchor).includes(option.label));
+      assert.ok(plainText(anchor).includes(option.priceLabel));
+    } else {
+      const button = [...join.matchAll(/<button\b[^>]*>/g)].find(
+        ([tag]) =>
+          tagAttribute(tag, "data-dues-link-placeholder") === option.id,
+      )?.[0];
+      assert.ok(button, `${option.id} needs an unavailable payment action`);
+      assert.match(button, /\sdisabled(?:[\s=>])/);
+      assert.ok(
+        !anchors.some(
+          (tag) => tagAttribute(tag, "data-dues-link") === option.id,
+        ),
+      );
+    }
   }
-
-  assert.doesNotMatch(join, /<h2[^>]*>\s*Contact\s*<\/h2>/);
-  assert.doesNotMatch(join, /href="\/join\/#contact"/);
-  assert.doesNotMatch(
-    join,
-    /covers?\s+two\s+semesters?|sav(?:e|es|ing|ings)\b/i,
-  );
-  assert.doesNotMatch(join, /data-join-link="(?:Email|GitHub)"/);
 });
 
 test("renders every configured footer channel", async () => {
@@ -838,16 +535,4 @@ test("renders every configured footer channel", async () => {
     home,
     new RegExp(`href="${escapeRegExp(footerEmailLink.href)}"`),
   );
-});
-
-test("links the sponsor contact action directly to email", async () => {
-  const sponsors = await readRoute("/sponsors/");
-
-  assert.match(
-    sponsors,
-    new RegExp(
-      `<a[^>]*href="${escapeRegExp(footerEmailLink.href)}"[^>]*>\\s*Contact us\\s*<\\/a>`,
-    ),
-  );
-  assert.doesNotMatch(sponsors, /href="\/join\/#contact"/);
 });

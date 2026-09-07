@@ -1,19 +1,7 @@
 import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
-export const siteOrigin = "https://quantucf.com";
-
-export const requiredRoutes = [
-  "/",
-  "/about/",
-  "/events/",
-  "/projects/",
-  "/officers/",
-  "/sponsors/",
-  "/join/",
-  "/posts/",
-  "/404/",
-];
+export { siteUrl as siteOrigin } from "../../src/lib/site.ts";
 
 export function outputPath(route) {
   if (route === "/") return path.resolve("dist/index.html");
@@ -28,10 +16,6 @@ export function staticOutputPath(filePath) {
 
 export function readRoute(route) {
   return readFile(outputPath(route), "utf8");
-}
-
-export function readSource(relativePath) {
-  return readFile(path.resolve(relativePath), "utf8");
 }
 
 export async function pathExists(filePath) {
@@ -108,7 +92,9 @@ export async function collectionEntries(collection) {
 }
 
 export function frontmatterValue(source, field) {
-  return source.match(new RegExp(`^${field}:\\s*(.+?)\\s*$`, "m"))?.[1];
+  return source
+    .match(new RegExp(`^${field}:[ \t]*(.+?)[ \t]*$`, "m"))?.[1]
+    ?.replace(/^(["'])(.*)\1$/, "$2");
 }
 
 export function tagAttribute(tag, attribute) {
