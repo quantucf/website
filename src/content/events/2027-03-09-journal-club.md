@@ -2,7 +2,7 @@
 title: Journal Club
 description: Evaluate empirical quantitative finance research with attention to design, evidence, and economic significance.
 eventType: research
-startDate: "2027-03-03"
+startDate: "2027-03-09"
 location: TBD
 ---
 

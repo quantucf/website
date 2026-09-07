@@ -2,7 +2,7 @@
 title: Financial Time-Series Models Workshop
 description: Build and evaluate time-series forecasts for financial data using a walk-forward process.
 eventType: workshop
-startDate: "2027-02-24"
+startDate: "2027-03-02"
 location: TBD
 ---
 

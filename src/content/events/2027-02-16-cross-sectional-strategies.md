@@ -2,7 +2,7 @@
 title: Cross-Sectional Strategies Workshop
 description: Learn how to construct and evaluate a strategy that ranks securities relative to one another at a given point in time.
 eventType: workshop
-startDate: "2027-02-10"
+startDate: "2027-02-16"
 location: TBD
 ---
 
