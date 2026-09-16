@@ -6,6 +6,7 @@ startDate: "2026-09-16T18:30:00-04:00"
 endDate: "2026-09-16T20:00:00-04:00"
 location: TCH, Room 0201
 rsvpUrl: https://knightconnect.campuslabs.com/engage/event/12758549
+slidesUrl: https://drive.google.com/file/d/1Oh49mZLPchAxaPT6Qv8723eYnapV3Y6r/view?usp=sharing
 ---
 
 **Prerequisites:** None
