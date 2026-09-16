@@ -2,8 +2,8 @@
 title: Python for Quantitative Finance Workshop
 description: An introduction to Python and Jupyter for analyzing financial data.
 eventType: workshop
-startDate: "2026-09-22T19:00:00-04:00"
-endDate: "2026-09-22T20:30:00-04:00"
+startDate: "2026-09-29T19:00:00-04:00"
+endDate: "2026-09-29T20:30:00-04:00"
 location: Business Administration I, Room 0221
 ---
 
