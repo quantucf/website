@@ -92,6 +92,16 @@ types are defined in [`src/lib/content.ts`](src/lib/content.ts) and
 Pushing to a feature branch creates a Vercel Preview deployment. Pushing
 to `main` deploys to production.
 
+The `Nightly Rebuild` GitHub Actions workflow triggers a production rebuild at
+00:17 America/New_York each day so static event listings reflect completed events.
+GitHub may delay scheduled runs. The workflow can also be run manually from Actions.
+
+In Vercel's project Git settings, create a deploy hook targeting `main` and save
+its URL as the GitHub repository Actions secret `VERCEL_DEPLOY_HOOK_URL`. Treat
+the URL as a credential. The schedule becomes active once the workflow is on
+`main`. A successful workflow confirms that Vercel accepted the trigger; check
+Vercel for the build and deployment result.
+
 ## Contributing
 
 1. Create a feature branch from `main`.

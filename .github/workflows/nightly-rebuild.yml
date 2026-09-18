@@ -1,0 +1,30 @@
+name: Nightly Rebuild
+
+on:
+  schedule:
+    - cron: "17 0 * * *"
+      timezone: America/New_York
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: nightly-rebuild
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    name: Trigger production rebuild
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger Vercel deploy hook
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$VERCEL_DEPLOY_HOOK_URL" ]; then
+            echo "::error::Configure the VERCEL_DEPLOY_HOOK_URL repository secret."
+            exit 1
+          fi
+          curl --fail --silent --show-error --max-time 60 \
+            --request POST --output /dev/null "$VERCEL_DEPLOY_HOOK_URL"
