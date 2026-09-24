@@ -5,6 +5,8 @@ eventType: workshop
 startDate: "2026-09-23T18:30:00-04:00"
 endDate: "2026-09-23T20:00:00-04:00"
 location: TCH, Room 0201
+rsvpUrl: https://knightconnect.campuslabs.com/engage/event/12792849
+slidesUrl: https://docs.google.com/presentation/d/1QIggTbqChrSXBYApgLNZ0typfPx0kcJk/edit?usp=share_link&ouid=101857820807030821534&rtpof=true&sd=true
 ---
 
 **Prerequisites:** Basic probability is recommended
