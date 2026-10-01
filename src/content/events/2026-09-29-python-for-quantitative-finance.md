@@ -5,6 +5,8 @@ eventType: workshop
 startDate: "2026-09-29T19:00:00-04:00"
 endDate: "2026-09-29T20:30:00-04:00"
 location: Business Administration I, Room 0221
+rsvpUrl: https://knightconnect.campuslabs.com/engage/event/12821734
+slidesUrl: https://drive.google.com/file/d/1cvDJIU4IRSGvj2RmauV2q0X7z3yJ7BFF/view?usp=sharing
 ---
 
 **Prerequisites:** None; some programming experience is helpful
