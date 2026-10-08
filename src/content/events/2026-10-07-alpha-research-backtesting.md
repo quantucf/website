@@ -5,6 +5,8 @@ eventType: research
 startDate: "2026-10-07T18:30:00-04:00"
 endDate: "2026-10-07T20:00:00-04:00"
 location: TCH, Room 0201
+rsvpUrl: https://knightconnect.campuslabs.com/engage/event/12867035
+slidesUrl: https://drive.google.com/file/d/1rWAv-3aC73bX8jnCoHVUbE0C6mbn2Oro/view?usp=sharing
 ---
 
 **Prerequisites:** Basic statistics and Python are helpful but not required

@@ -5,6 +5,8 @@ eventType: workshop
 startDate: "2026-10-06T19:00:00-04:00"
 endDate: "2026-10-06T20:30:00-04:00"
 location: Business Administration I, Room 0221
+rsvpUrl: https://knightconnect.campuslabs.com/engage/event/12867021
+slidesUrl: https://drive.google.com/file/d/1p2VAfPKbbASueUBYTqc3eLjMzKKLefl5/view?usp=sharing
 ---
 
 **Prerequisites:** Basic probability and algebra recommended
