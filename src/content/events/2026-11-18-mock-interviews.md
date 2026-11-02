@@ -1,9 +1,9 @@
 ---
-title: Mock Quant Interviews
+title: Mock Interviews
 description: Practice quantitative research and trading interviews in a structured environment and receive feedback on reasoning and communication.
 eventType: recruiting
-startDate: "2026-11-11T18:30:00-05:00"
-endDate: "2026-11-11T20:00:00-05:00"
+startDate: "2026-11-18T18:30:00-05:00"
+endDate: "2026-11-18T20:00:00-05:00"
 location: TCH, Room 0201
 ---
 
