@@ -2,8 +2,8 @@
 title: Why Black–Scholes Works (and Doesn’t)
 description: Derive the Black–Scholes framework from no-arbitrage reasoning and examine why it remains useful despite unrealistic assumptions.
 eventType: meeting
-startDate: "2026-11-10T19:00:00-05:00"
-endDate: "2026-11-10T20:30:00-05:00"
+startDate: "2026-11-17T19:00:00-05:00"
+endDate: "2026-11-17T20:30:00-05:00"
 location: Business Administration I, Room 0221
 ---
 

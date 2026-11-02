@@ -2,8 +2,8 @@
 title: Options and Derivatives Problem Session
 description: Apply derivatives and no-arbitrage concepts through quantitative problems involving options, replication, and pricing relationships.
 eventType: workshop
-startDate: "2026-10-28T18:30:00-04:00"
-endDate: "2026-10-28T20:00:00-04:00"
+startDate: "2026-11-04T18:30:00-05:00"
+endDate: "2026-11-04T20:00:00-05:00"
 location: TCH, Room 0201
 ---
 
