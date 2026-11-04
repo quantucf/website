@@ -6,6 +6,7 @@ startDate: "2026-11-04T18:30:00-05:00"
 endDate: "2026-11-04T20:00:00-05:00"
 location: TCH, Room 0201
 rsvpUrl: https://knightconnect.campuslabs.com/engage/event/12947812
+slidesUrl: https://drive.google.com/file/d/1C5FN4JcVZPCaJWOcikyBuFomLqPTNdB3/view?usp=sharing
 ---
 
 **Prerequisites:** Attendance at the Options and Derivatives Workshop and No-Arbitrage Workshop is recommended
