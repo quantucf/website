@@ -58,7 +58,7 @@ export async function GET() {
     "/about/",
     "/events/",
     "/projects/",
-    "/officers/",
+    "/leadership/",
     "/sponsors/",
     "/join/",
     ...pageRoutes("/posts/", publishedPosts.length, POSTS_PER_PAGE),

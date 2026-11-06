@@ -1,0 +1,52 @@
+---
+import { getCollection } from "astro:content";
+
+import PageSection from "../components/layout/PageSection.astro";
+import OfficerCard from "../components/sections/OfficerCard.astro";
+import PageHero from "../components/sections/PageHero.astro";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+import EmptyState from "../components/ui/EmptyState.astro";
+import { facultyAdvisor } from "../data/site-content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const officers = (await getCollection("officers")).sort(
+  (left, right) => left.data.order - right.data.order,
+);
+---
+
+<BaseLayout
+  title="Leadership | Quantitative Finance Club @ UCF"
+  description="Meet the student officers and faculty advisor of the Quantitative Finance Club @ UCF."
+>
+  <PageHero
+    title="Leadership"
+    description="Meet the student officers and faculty advisor of the club."
+  />
+
+  <PageSection>
+    <SectionHeader title="Officers" />
+    <div class="mt-8">
+      {
+        officers.length > 0 ? (
+          <div class="grid gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+            {officers.map((officer) => (
+              <OfficerCard officer={officer.data} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState subject="officers" />
+        )
+      }
+    </div>
+  </PageSection>
+
+  <PageSection>
+    <SectionHeader title="Advisor" />
+    <div class="mt-8 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+      <OfficerCard
+        officer={facultyAdvisor}
+        profileUrl={facultyAdvisor.profileUrl}
+      />
+    </div>
+  </PageSection>
+</BaseLayout>
