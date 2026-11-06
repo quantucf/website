@@ -9,4 +9,4 @@ topics:
 
 In collaboration with AmStat, we will examine publicly available monthly return histories for approximately 200 published signals. We will use returns from after each study’s original sample period and report how many signals remain statistically significant after adjusting for multiple testing.
 
-Related project with AmStat · [Forecasting U.S. Equity Returns](/projects/forecasting-us-equity-returns/)
+Related project with AmStat: [Forecasting U.S. Equity Returns](/projects/forecasting-us-equity-returns/)
