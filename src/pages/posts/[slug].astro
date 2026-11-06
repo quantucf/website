@@ -41,46 +41,43 @@ const canonicalUrl = absoluteUrl(`/posts/${post.id}/`);
       <div class="max-w-content">
         <a class="text-sm font-semibold underline" href="/posts/">All posts</a>
         <header class="mt-10">
-          <p class="text-muted-foreground text-sm">
-            <LocalizedDate
-              date={post.data.date}
-              format="date"
-              dateStyle="long"
-              timeZone="UTC"
-            />
-            {
-              post.data.author && (
-                <>
-                  <span aria-hidden="true">{" · "}</span>
-                  <span class="sr-only">{", "}</span>
-                  <span>{post.data.author}</span>
-                </>
-              )
-            }
-          </p>
           <h1
-            class="mt-5 text-4xl font-semibold tracking-tight text-balance sm:text-5xl"
+            class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl"
           >
             {post.data.title}
           </h1>
-          <p class="text-muted-foreground mt-6 text-lg leading-8 text-pretty">
+          <p class="text-muted-foreground mt-5 text-lg leading-8 text-pretty">
             {post.data.description}
           </p>
-          {
-            post.data.topics.length > 0 && (
-              <BoxList
-                items={post.data.topics}
-                label="Post topics"
-                kind="tag"
-                class="mt-6"
+          <p
+            class="text-muted-foreground mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+          >
+            {post.data.author && <span>{post.data.author}</span>}
+            <span
+              class:list={[post.data.author && "border-border border-l pl-3"]}
+            >
+              <LocalizedDate
+                date={post.data.date}
+                format="date"
+                dateStyle="long"
+                timeZone="UTC"
               />
-            )
-          }
+            </span>
+          </p>
         </header>
 
         <MarkdownBody>
           <Content />
         </MarkdownBody>
+
+        <footer>
+          <BoxList
+            items={post.data.topics}
+            label="Post topics"
+            kind="tag"
+            class="mt-8"
+          />
+        </footer>
       </div>
     </Container>
   </article>
