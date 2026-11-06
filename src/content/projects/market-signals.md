@@ -1,6 +1,6 @@
 ---
 title: Out-of-Sample Signal Performance
-description: Test whether published market signals retain predictive value outside their original samples.
+description: Test whether published market signals retain predictive power outside their original samples.
 status: active
 topics:
   - Asset Pricing
