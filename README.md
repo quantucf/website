@@ -82,6 +82,11 @@ when adding new content:
 | Projects   | [`src/content/projects/.template.md`](src/content/projects/.template.md) |
 | Sponsors   | [`src/content/sponsors/.template.md`](src/content/sponsors/.template.md) |
 
+At board handover, copy the outgoing roster from `src/content/officers/current/`
+to a dated folder such as `src/content/officers/2025-26/`. Review which contact
+links to keep on past profiles, then update the files in `current/` for the
+incoming board. Dated rosters appear newest first below the advisor.
+
 Site-wide links and contact details are in
 [`src/data/site-content.ts`](src/data/site-content.ts). Topic labels and event
 types are defined in [`src/lib/content.ts`](src/lib/content.ts) and

@@ -1,4 +1,5 @@
 ---
+import ChevronDown from "@lucide/astro/icons/chevron-down";
 import { getCollection } from "astro:content";
 
 import PageSection from "../components/layout/PageSection.astro";
@@ -11,6 +12,34 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 const officers = (await getCollection("officers")).sort(
   (left, right) => left.data.order - right.data.order,
+);
+const currentOfficers: typeof officers = [];
+const officersByTerm = new Map<string, typeof officers>();
+
+for (const officer of officers) {
+  const [rosterFolder] = officer.id.split("/");
+
+  if (rosterFolder === "current") {
+    currentOfficers.push(officer);
+    continue;
+  }
+
+  if (!/^\d{4}-\d{2}$/.test(rosterFolder)) {
+    throw new Error(
+      `Officer "${officer.id}" must be in current/ or a YYYY-YY roster folder.`,
+    );
+  }
+
+  const roster = officersByTerm.get(rosterFolder);
+  if (roster) {
+    roster.push(officer);
+  } else {
+    officersByTerm.set(rosterFolder, [officer]);
+  }
+}
+
+const pastTerms = [...officersByTerm].sort(([left], [right]) =>
+  right.localeCompare(left),
 );
 ---
 
@@ -27,9 +56,9 @@ const officers = (await getCollection("officers")).sort(
     <SectionHeader title="Officers" />
     <div class="mt-8">
       {
-        officers.length > 0 ? (
+        currentOfficers.length > 0 ? (
           <div class="grid gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-            {officers.map((officer) => (
+            {currentOfficers.map((officer) => (
               <OfficerCard officer={officer.data} />
             ))}
           </div>
@@ -49,4 +78,27 @@ const officers = (await getCollection("officers")).sort(
       />
     </div>
   </PageSection>
+
+  {
+    pastTerms.map(([year, roster]) => (
+      <PageSection class="py-8! sm:py-10!">
+        <details class="group">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 [&::-webkit-details-marker]:hidden">
+            <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">
+              {year.replace("-", "–")} Officers
+            </h2>
+            <ChevronDown
+              class="text-muted-foreground size-5 shrink-0 group-open:rotate-180"
+              aria-hidden="true"
+            />
+          </summary>
+          <div class="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+            {roster.map((officer) => (
+              <OfficerCard officer={officer.data} />
+            ))}
+          </div>
+        </details>
+      </PageSection>
+    ))
+  }
 </BaseLayout>
