@@ -8,7 +8,7 @@ topics:
   - Statistics
 ---
 
-In collaboration with AmStat, we will use publicly available market data to test whether published signals retain predictive value outside their original samples.
+In collaboration with AmStat, we will conduct two research projects using publicly available market data. The first will test whether published signals retain predictive value outside their original samples. The second will compare models for forecasting U.S. equity returns.
 
 ## Out-of-Sample Signal Performance
 
