@@ -92,3 +92,10 @@ export const footerEmailLink: SiteLink = {
   href: `mailto:${contactEmail}`,
   icon: "email",
 };
+
+export const facultyAdvisor = {
+  name: "Vijay Chopra, Ph.D., CFA",
+  role: "Lecturer, Finance",
+  email: "vijay.chopra@ucf.edu",
+  profileUrl: "https://business.ucf.edu/person/vijay-chopra/",
+};

@@ -2,5 +2,17 @@
   "framework": "astro",
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm build",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/officers",
+      "destination": "/leadership/",
+      "permanent": true
+    },
+    {
+      "source": "/officers/",
+      "destination": "/leadership/",
+      "permanent": true
+    }
+  ]
 }

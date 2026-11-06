@@ -5,11 +5,11 @@ import { getInitials } from "../../lib/content";
 import Icon from "../ui/Icon.astro";
 
 interface Props {
-  officer: CollectionEntry<"officers">["data"];
+  officer: Omit<CollectionEntry<"officers">["data"], "order">;
+  profileUrl?: string;
 }
 
-const { officer } = Astro.props;
-const programDetails = [officer.program, officer.year].filter(Boolean);
+const { officer, profileUrl } = Astro.props;
 const contactLinks = [
   officer.linkedin && {
     label: `${officer.name} on LinkedIn`,
@@ -20,6 +20,11 @@ const contactLinks = [
     label: `${officer.name} on GitHub`,
     href: officer.github,
     icon: "github" as const,
+  },
+  profileUrl && {
+    label: `${officer.name}’s UCF faculty profile`,
+    href: profileUrl,
+    icon: "id-card" as const,
   },
   officer.email && {
     label: `Email ${officer.name}`,
@@ -38,12 +43,25 @@ const contactLinks = [
   >
     {getInitials(officer.name)}
   </div>
-  <h2 class="mt-5 text-xl font-semibold tracking-tight">{officer.name}</h2>
+  <h3 class="mt-5 text-xl font-semibold tracking-tight">{officer.name}</h3>
   <p class="mt-1 font-medium">{officer.role}</p>
   {
-    programDetails.length > 0 && (
+    (officer.program || officer.year) && (
       <p class="text-muted-foreground mt-3 text-sm leading-6">
-        {programDetails.join(" · ")}
+        {officer.program}
+        {officer.year && (
+          <>
+            {officer.program && <span class="sr-only">,</span>}{" "}
+            <span
+              class:list={[
+                "whitespace-nowrap",
+                officer.program && "border-border ml-1 border-l pl-2",
+              ]}
+            >
+              {officer.year}
+            </span>
+          </>
+        )}
       </p>
     )
   }
