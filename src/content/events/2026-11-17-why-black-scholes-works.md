@@ -6,6 +6,7 @@ startDate: "2026-11-17T19:00:00-05:00"
 endDate: "2026-11-17T20:30:00-05:00"
 location: Business Administration I, Room 0221
 rsvpUrl: https://knightconnect.campuslabs.com/engage/event/12975546
+slidesUrl: https://drive.google.com/file/d/1-_Y5IKnfz9KvARHYUCmpA-trkvQXSs70/view?usp=sharing
 ---
 
 **Prerequisites:** Familiarity with option payoffs, replication, and binomial pricing; volatility concepts are helpful; no stochastic calculus needed
