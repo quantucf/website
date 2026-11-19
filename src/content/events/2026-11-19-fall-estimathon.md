@@ -10,3 +10,5 @@ Presented by Pegasus Math Club, AmStat @ UCF, and the Quantitative Finance Club.
 
 Teams estimate answers to real-world questions and are scored on accuracy. The
 top five teams win Jane Street Estimathon T-shirts and other assorted prizes.
+
+![Fall Estimathon poster: Thursday, 19 November, at 7:30 pm in NSC 0117, presented by Pegasus Math Club, AmStat @ UCF, and the Quantitative Finance Club.](../../assets/events/fall-estimathon.png)
