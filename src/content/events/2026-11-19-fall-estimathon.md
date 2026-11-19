@@ -1,0 +1,12 @@
+---
+title: Fall Estimathon
+description: Compete in teams to estimate answers to real-world questions, with scores based on accuracy and prizes for the top five teams.
+eventType: competition
+startDate: "2026-11-19T19:30:00-05:00"
+location: NSC, Room 0117
+---
+
+Presented by Pegasus Math Club, AmStat @ UCF, and the Quantitative Finance Club.
+
+Teams estimate answers to real-world questions and are scored on accuracy. The
+top five teams win Jane Street Estimathon T-shirts and other assorted prizes.
