@@ -4,6 +4,7 @@ description: Compete in teams to estimate answers to real-world questions, with 
 eventType: competition
 startDate: "2026-11-19T19:30:00-05:00"
 location: NSC, Room 0117
+rsvpUrl: https://knightconnect.campuslabs.com/engage/event/12991739
 ---
 
 Presented by Pegasus Math Club, AmStat @ UCF, and the Quantitative Finance Club.
